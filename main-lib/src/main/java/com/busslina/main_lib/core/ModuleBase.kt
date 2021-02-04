@@ -18,7 +18,11 @@ abstract class ModuleBase {
         return state == STATE_STARTED
     }
 
-    abstract fun start()
+    open fun start() {
+        TODO("Optional implementation on child class")
+    }
 
-    abstract fun stop()
+    open fun stop() {
+        TODO("Optional implementation on child class")
+    }
 }
