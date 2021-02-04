@@ -7,8 +7,8 @@ class CommonsModules {
 
     companion object {
 
-        lateinit var foregroundService: ForegroundServiceBase
-        lateinit var websocket: WebSocketBase
+        var foregroundService: ForegroundServiceBase? = null
+        var websocket: WebSocketBase? = null
 
     }
 }
