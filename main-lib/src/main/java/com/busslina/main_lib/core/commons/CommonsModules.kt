@@ -1,4 +1,4 @@
-package com.busslina.main_lib.core
+package com.busslina.main_lib.core.commons
 
 import com.busslina.main_lib.core.modules.ForegroundServiceBase
 import com.busslina.main_lib.core.modules.WebSocketBase
