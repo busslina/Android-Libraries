@@ -9,6 +9,14 @@ abstract class ForegroundServiceBase: Service {
         const val NOTIFICATION_ID = 101
         const val STATE_STOPPED = 0
         const val STATE_STARTED = 1
+
+        fun isStopped(): Boolean {
+            return CommonsModules.foregroundService != null && CommonsModules.foregroundService!!.isStopped()
+        }
+
+        fun isStarted(): Boolean {
+            return CommonsModules.foregroundService != null && CommonsModules.foregroundService!!.isStarted()
+        }
     }
 
     var state = STATE_STOPPED
