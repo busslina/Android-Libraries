@@ -149,6 +149,8 @@ abstract class WebSocketBase: ModuleBase {
             websocketId = id as Int
             connected = true
 
+            Commons.sendMessageMethodChannel(Commons.METHOD_CHANNEL_WEBSOCKET_SERVICE_STARTED, null)
+
             // TODO: stuff
         }
 

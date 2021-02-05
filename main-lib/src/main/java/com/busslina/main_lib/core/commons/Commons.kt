@@ -2,6 +2,8 @@ package com.busslina.main_lib.core.commons
 
 import android.content.Context
 import android.content.Intent
+import android.os.Handler
+import android.os.Looper
 import com.busslina.main_lib.core.interfaces.MainActivityI
 import com.busslina.main_lib.core.modules.ForegroundServiceBase
 
@@ -29,6 +31,12 @@ class Commons {
             this.token = token
 
             preInitied = true
+        }
+
+        fun sendMessageMethodChannel(method: String, args: Any?) {
+            Handler(Looper.getMainLooper()).post {
+                mainActivity.sendMessageMethodChannel(method, args)
+            }
         }
 
 
