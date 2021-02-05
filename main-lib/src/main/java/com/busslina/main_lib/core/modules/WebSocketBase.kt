@@ -6,7 +6,7 @@ import io.socket.client.IO
 import io.socket.client.Socket
 import java.lang.Exception
 
-abstract class WebSocketBase: ModuleBase() {
+abstract class WebSocketBase: ModuleBase {
 
     companion object {
         var enableWebsocketSubModule = false
@@ -28,13 +28,14 @@ abstract class WebSocketBase: ModuleBase() {
 
     var connected = false
     var ruptureDisconnected = false
+    var manuallyDisconnected = false
 
     /**
      * Constructor.
      */
-//    constructor(): super() {
-//        CommonsModules.websocket = this
-//    }
+    constructor(): super() {
+        CommonsModules.websocket = this
+    }
 
     /**
      * Inherited functions
@@ -43,6 +44,7 @@ abstract class WebSocketBase: ModuleBase() {
      * - 02 - Stop
      */
 
+    //region
     /**
      * 01 - Start.
      */
@@ -50,6 +52,7 @@ abstract class WebSocketBase: ModuleBase() {
         if (isStarted()) {
             return
         }
+        resetState()
 
         connect()
 
@@ -68,14 +71,18 @@ abstract class WebSocketBase: ModuleBase() {
 
         state = STATE_STOPPED
     }
+    //endregion
 
     /**
      * Functions
      *
      * - 01 - Connect
      * - 02 - Disconnect
+     * - 03 - On socket connected
+     * - 04 - Reset state
      */
 
+    //region
     /**
      * 01 - Connect.
      */
@@ -91,14 +98,23 @@ abstract class WebSocketBase: ModuleBase() {
 
         socket.once("connect") {
             println("Websocket: connect")
+            onSocketConnected(false)
         }
 
         socket.on("disconnect") {
             println("Websocket: disconnect")
+            println("Manually disconnected: $manuallyDisconnected")
+            if (manuallyDisconnected) {
+                return@on
+            }
+            connected = false
+            ruptureDisconnected = true
         }
 
         socket.on("reconnect") {
             println("Websocket: reconnect")
+            ruptureDisconnected = false
+            onSocketConnected(true)
         }
 
         socket.connect()
@@ -108,8 +124,28 @@ abstract class WebSocketBase: ModuleBase() {
      * 02 - Disconnect.
      */
     private fun disconnect() {
-        TODO()
+        manuallyDisconnected = true
+        socket.disconnect()
+        connected = false
+        ruptureDisconnected = false
     }
+
+    /**
+     * 03 - On socket connected.
+     */
+    private fun onSocketConnected(reconnection: Boolean) {
+
+    }
+
+    /**
+     * 04 - Reset state.
+     */
+    private fun resetState() {
+        connected = false
+        ruptureDisconnected = false
+        manuallyDisconnected = false
+    }
+    //endregion
 
 
 }

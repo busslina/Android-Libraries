@@ -6,8 +6,6 @@ abstract class ModuleBase {
 
     companion object {
 
-        lateinit var factoryObj: ModuleBase
-
         const val STATE_STOPPED = 0
         const val STATE_STARTED = 1
     }

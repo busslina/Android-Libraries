@@ -3,11 +3,9 @@ package com.busslina.main_lib.core.modules
 import android.app.Service
 import com.busslina.main_lib.core.commons.CommonsModules
 
-abstract class ForegroundServiceBase: Service() {
+abstract class ForegroundServiceBase: Service {
 
     companion object {
-
-        lateinit var factoryObj: ForegroundServiceBase
 
         const val NOTIFICATION_ID = 101
         const val STATE_STOPPED = 0
@@ -27,9 +25,9 @@ abstract class ForegroundServiceBase: Service() {
     /**
      * Constructor.
      */
-//    constructor(): super() {
-//        CommonsModules.foregroundService = this
-//    }
+    constructor(): super() {
+        CommonsModules.foregroundService = this
+    }
 
     /**
      * Functions
@@ -38,6 +36,7 @@ abstract class ForegroundServiceBase: Service() {
      * - 02 - Is started
      */
 
+    //region
     /**
      * 01 - Is stopped.
      */
@@ -51,4 +50,5 @@ abstract class ForegroundServiceBase: Service() {
     fun isStarted(): Boolean {
         return state == STATE_STARTED
     }
+    //endregion
 }
