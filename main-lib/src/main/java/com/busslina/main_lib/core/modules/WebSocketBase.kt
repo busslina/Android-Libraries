@@ -98,6 +98,10 @@ abstract class WebSocketBase: ModuleBase {
 
         socket = IO.socket(url, options)
 
+        socket.on("*") {
+            println("Websocket: any event")
+        }
+
         socket.on("connect") {
             println("Websocket: connect")
             onSocketConnected(false)
