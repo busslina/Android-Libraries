@@ -96,7 +96,7 @@ abstract class WebSocketBase: ModuleBase {
 
         socket = IO.socket(url, options)
 
-        socket.once("connect") {
+        socket.on("connect") {
             println("Websocket: connect")
             onSocketConnected(false)
         }
