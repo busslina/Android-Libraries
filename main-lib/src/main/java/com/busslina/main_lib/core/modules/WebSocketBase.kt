@@ -92,6 +92,7 @@ abstract class WebSocketBase: ModuleBase {
         }
 
         val options = IO.Options.builder()
+                .setReconnection(true)
                 .build()
 
         socket = IO.socket(url, options)
