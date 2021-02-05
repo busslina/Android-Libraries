@@ -6,7 +6,7 @@ import io.socket.client.IO
 import io.socket.client.Socket
 import java.lang.Exception
 
-abstract class WebSocketBase: ModuleBase {
+abstract class WebSocketBase: ModuleBase() {
 
     companion object {
         var enableWebsocketSubModule = false
@@ -29,10 +29,23 @@ abstract class WebSocketBase: ModuleBase {
     var connected = false
     var ruptureDisconnected = false
 
-    constructor(): super() {
-        CommonsModules.websocket = this
-    }
+    /**
+     * Constructor.
+     */
+//    constructor(): super() {
+//        CommonsModules.websocket = this
+//    }
 
+    /**
+     * Inherited functions
+     *
+     * - 01 - Start
+     * - 02 - Stop
+     */
+
+    /**
+     * 01 - Start.
+     */
     override fun start() {
         if (isStarted()) {
             return
@@ -43,6 +56,9 @@ abstract class WebSocketBase: ModuleBase {
         state = STATE_STARTED
     }
 
+    /**
+     * 02 - Stop.
+     */
     override fun stop() {
         if (isStopped()) {
             return
@@ -53,6 +69,16 @@ abstract class WebSocketBase: ModuleBase {
         state = STATE_STOPPED
     }
 
+    /**
+     * Functions
+     *
+     * - 01 - Connect
+     * - 02 - Disconnect
+     */
+
+    /**
+     * 01 - Connect.
+     */
     private fun connect() {
         if (!preInitied) {
             throw Exception("WebSocket not preinitied")
@@ -78,6 +104,9 @@ abstract class WebSocketBase: ModuleBase {
         socket.connect()
     }
 
+    /**
+     * 02 - Disconnect.
+     */
     private fun disconnect() {
         TODO()
     }
