@@ -5,6 +5,7 @@ import com.busslina.main_lib.core.commons.Commons
 import com.busslina.main_lib.core.commons.CommonsModules
 import io.socket.client.IO
 import io.socket.client.Socket
+import org.json.JSONObject
 import java.lang.Exception
 
 abstract class WebSocketBase: ModuleBase {
@@ -138,7 +139,8 @@ abstract class WebSocketBase: ModuleBase {
     private fun onSocketConnected(reconnection: Boolean) {
 
         // 1. Sending token & device type
-        val data: Map<String, Any> = mapOf("token" to Commons.token, "deviceType" to Utils.getDeviceType())
+        val mapData: Map<String, Any> = mapOf("token" to Commons.token, "deviceType" to Utils.getDeviceType())
+        val data = JSONObject(mapData)
         socket.emit(Events.WS_SIGNAL_AUTH_TOKEN, data)
 
         // 2. Receive assigned id
