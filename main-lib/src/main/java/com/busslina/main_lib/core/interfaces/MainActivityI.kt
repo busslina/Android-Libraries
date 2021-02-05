@@ -10,7 +10,8 @@ interface MainActivityI {
 
     var foregroundServiceIntent: Intent
 
-    fun initChannelMethod()
+    fun initMethodChannel()
+    fun sendMessageMethodChannel()
 
     fun startForegroundService()
     fun stopForegroundService()

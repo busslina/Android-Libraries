@@ -158,8 +158,6 @@ abstract class WebSocketBase: ModuleBase {
 
             // TODO: stuff
         }
-
-
     }
 
     /**
@@ -170,14 +168,10 @@ abstract class WebSocketBase: ModuleBase {
         ruptureDisconnected = false
     }
     //endregion
-
-
 }
 
 private class Events {
-
     companion object {
-
         const val WS_SIGNAL_AUTH_TOKEN      = "auth-token"
         const val WS_SIGNAL_ID_ASSIGNATION  = "assigned-id"
         const val WS_SIGNAL_SESSION_KILLED  = "session-killed"
@@ -185,9 +179,7 @@ private class Events {
 }
 
 private class Utils {
-
     companion object {
-
         const val DEVICE_ANGULAR: Byte  = 0
         const val DEVICE_ANDROID: Byte  = 1
         const val DEVICE_IOS: Byte      = 2
