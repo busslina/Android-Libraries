@@ -9,14 +9,16 @@ import java.lang.Exception
 abstract class WebSocketBase: ModuleBase {
 
     companion object {
+        var enableWebsocketSubModule = false
         lateinit var url: String
 
-        var preInitied = false
+        private var preInitied = false
 
-        fun preInit(url: String) {
+        fun preInit(enableWebsocketSubModule: Boolean, url: String) {
             if (preInitied) {
                 return
             }
+            this.enableWebsocketSubModule = enableWebsocketSubModule
             this.url = url
             preInitied = true
         }

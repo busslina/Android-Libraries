@@ -4,6 +4,10 @@ import android.content.Intent
 
 interface MainActivityI {
 
+    companion object {
+
+    }
+
     var foregroundServiceIntent: Intent
 
     fun initChannelMethod()
