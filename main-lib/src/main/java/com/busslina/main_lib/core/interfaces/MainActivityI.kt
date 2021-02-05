@@ -11,7 +11,7 @@ interface MainActivityI {
     var foregroundServiceIntent: Intent
 
     fun initMethodChannel()
-    fun sendMessageMethodChannel()
+    fun sendMessageMethodChannel(method: String, args: Any?)
 
     fun startForegroundService()
     fun stopForegroundService()
