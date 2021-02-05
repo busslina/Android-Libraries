@@ -28,7 +28,6 @@ abstract class WebSocketBase: ModuleBase {
 
     var connected = false
     var ruptureDisconnected = false
-    var manuallyDisconnected = false
 
     /**
      * Constructor.
@@ -97,7 +96,7 @@ abstract class WebSocketBase: ModuleBase {
                 .build()
 
         socket = IO.socket(url, options)
-        
+
 
         socket.on("connect") {
             println("Websocket: connect")
@@ -106,15 +105,11 @@ abstract class WebSocketBase: ModuleBase {
 
         socket.on("disconnect") {
             println("Websocket: disconnect")
-            println("Manually disconnected: $manuallyDisconnected")
-            if (manuallyDisconnected) {
-                return@on
-            }
             connected = false
             ruptureDisconnected = true
         }
 
-        socket.on("reconnect") {
+        socket.io().on("reconnect") {
             println("Websocket: reconnect")
             ruptureDisconnected = false
             onSocketConnected(true)
@@ -127,10 +122,9 @@ abstract class WebSocketBase: ModuleBase {
      * 02 - Disconnect.
      */
     private fun disconnect() {
-        manuallyDisconnected = true
+        socket.off("disconnect")
         socket.disconnect()
-        connected = false
-        ruptureDisconnected = false
+        resetState()
     }
 
     /**
@@ -138,9 +132,6 @@ abstract class WebSocketBase: ModuleBase {
      */
     private fun onSocketConnected(reconnection: Boolean) {
 
-        // Test
-        // Disable disconnect event
-        socket.off("disconnect")
 
     }
 
@@ -150,7 +141,6 @@ abstract class WebSocketBase: ModuleBase {
     private fun resetState() {
         connected = false
         ruptureDisconnected = false
-        manuallyDisconnected = false
     }
     //endregion
 
