@@ -1,6 +1,7 @@
 package com.busslina.main_lib.core.modules
 
 import com.busslina.main_lib.core.ModuleBase
+import com.busslina.main_lib.core.commons.Commons
 import com.busslina.main_lib.core.commons.CommonsModules
 import io.socket.client.IO
 import io.socket.client.Socket
@@ -28,6 +29,8 @@ abstract class WebSocketBase: ModuleBase {
 
     var connected = false
     var ruptureDisconnected = false
+
+    var websocketId = -1
 
     /**
      * Constructor.
@@ -98,7 +101,7 @@ abstract class WebSocketBase: ModuleBase {
         socket = IO.socket(url, options)
 
 
-        socket.on("connect") {
+        socket.once("connect") {
             println("Websocket: connect")
             onSocketConnected(false)
         }
@@ -107,6 +110,8 @@ abstract class WebSocketBase: ModuleBase {
             println("Websocket: disconnect")
             connected = false
             ruptureDisconnected = true
+
+            // TODO: stuff
         }
 
         socket.io().on("reconnect") {
@@ -132,6 +137,26 @@ abstract class WebSocketBase: ModuleBase {
      */
     private fun onSocketConnected(reconnection: Boolean) {
 
+        // 1. Sending token & device type
+        val data: Map<String, Any> = mapOf("token" to Commons.token, "deviceType" to Utils.getDeviceType())
+        socket.emit(Events.WS_SIGNAL_AUTH_TOKEN, data)
+
+        // 2. Receive assigned id
+        socket.once(Events.WS_SIGNAL_ID_ASSIGNATION) { (id) ->
+            println("Assignated id: $id")
+            websocketId = id as Int
+            connected = true
+
+            // TODO: stuff
+        }
+
+        // 3. Managing session killed
+        socket.once(Events.WS_SIGNAL_SESSION_KILLED) {
+            println("Session killed")
+
+            // TODO: stuff
+        }
+
 
     }
 
@@ -145,4 +170,29 @@ abstract class WebSocketBase: ModuleBase {
     //endregion
 
 
+}
+
+private class Events {
+
+    companion object {
+
+        const val WS_SIGNAL_AUTH_TOKEN      = "auth-token"
+        const val WS_SIGNAL_ID_ASSIGNATION  = "assigned-id"
+        const val WS_SIGNAL_SESSION_KILLED  = "session-killed"
+    }
+}
+
+private class Utils {
+
+    companion object {
+
+        const val DEVICE_ANGULAR: Byte  = 0
+        const val DEVICE_ANDROID: Byte  = 1
+        const val DEVICE_IOS: Byte      = 2
+        const val DEVICE_OTHER: Byte    = 3
+
+        fun getDeviceType(): Byte {
+            return DEVICE_ANDROID
+        }
+    }
 }

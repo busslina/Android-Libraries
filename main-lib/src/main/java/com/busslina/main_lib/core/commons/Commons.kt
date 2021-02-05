@@ -14,5 +14,19 @@ class Commons {
         const val METHOD_CHANNEL_WEBSOCKET_SERVICE_STARTED  = "websocketServiceStarted"
         const val METHOD_CHANNEL_WEBSOCKET_SERVICE_STOPPED  = "websocketServiceStopped"
 
+
+        var preInitied = false
+
+        lateinit var token: String
+
+        fun preInit(token: String) {
+            if (preInitied) {
+                return
+            }
+
+            this.token = token
+
+            preInitied = true
+        }
     }
 }
