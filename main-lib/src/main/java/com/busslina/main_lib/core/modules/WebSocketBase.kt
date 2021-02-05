@@ -97,10 +97,7 @@ abstract class WebSocketBase: ModuleBase {
                 .build()
 
         socket = IO.socket(url, options)
-
-        socket.on("*") {
-            println("Websocket: any event")
-        }
+        
 
         socket.on("connect") {
             println("Websocket: connect")
@@ -140,6 +137,10 @@ abstract class WebSocketBase: ModuleBase {
      * 03 - On socket connected.
      */
     private fun onSocketConnected(reconnection: Boolean) {
+
+        // Test
+        // Disable disconnect event
+        socket.off("disconnect")
 
     }
 
