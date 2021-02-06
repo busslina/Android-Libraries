@@ -123,7 +123,7 @@ abstract class WebSocketBase: ModuleBase {
         }
 
         // Testing fake notification
-        socket.io().on("fake-notification") {
+        socket.on("fake-notification") {
             println("Websocket: fake-notification")
             val ctx = CommonsModules.foregroundService!!
             val mainClass = Commons.mainActivity::class.java
