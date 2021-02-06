@@ -1,5 +1,6 @@
 package com.busslina.main_lib.core.modules
 
+import android.content.Intent
 import com.busslina.main_lib.core.ModuleBase
 import com.busslina.main_lib.core.commons.Commons
 import com.busslina.main_lib.core.commons.CommonsModules
@@ -121,6 +122,16 @@ abstract class WebSocketBase: ModuleBase {
             onSocketConnected(true)
         }
 
+        // Testing fake notification
+        socket.io().on("fake-notification") {
+            println("Websocket: fake-notification")
+            val ctx = CommonsModules.foregroundService!!
+            val mainClass = CommonsModules.mainClass!!
+            val intent = Intent(ctx, mainClass)
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            ctx.startActivity(intent)
+        }
+
         socket.connect()
     }
 
@@ -149,7 +160,7 @@ abstract class WebSocketBase: ModuleBase {
             websocketId = id as Int
             connected = true
 
-            Commons.sendMessageMethodChannel(Commons.METHOD_CHANNEL_WEBSOCKET_SERVICE_STARTED, null)
+            Commons.sendMessageMethodChannel(Commons.METHOD_CHANNEL_WEBSOCKET_SERVICE_CONNECTED, null)
 
             // TODO: stuff
         }

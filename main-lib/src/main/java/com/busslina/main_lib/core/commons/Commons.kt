@@ -11,11 +11,12 @@ class Commons {
 
     companion object {
 
-        const val DEFAULT_METHOD_CHANNEL_NAME               = "myFlutterApp"
-        const val METHOD_CHANNEL_START_FOREGROUND_SERVICE   = "startForegoundService"
-        const val METHOD_CHANNEL_STOP_FOREGROUND_SERVICE    = "stopForegoundService"
-        const val METHOD_CHANNEL_WEBSOCKET_SERVICE_STARTED  = "websocketServiceStarted"
-        const val METHOD_CHANNEL_WEBSOCKET_SERVICE_STOPPED  = "websocketServiceStopped"
+        const val DEFAULT_METHOD_CHANNEL_NAME                   = "myFlutterApp"
+        const val METHOD_CHANNEL_START_FOREGROUND_SERVICE       = "startForegoundService"
+        const val METHOD_CHANNEL_STOP_FOREGROUND_SERVICE        = "stopForegoundService"
+        const val METHOD_CHANNEL_WEBSOCKET_SERVICE_CONNECTED    = "websocketServiceConnected"
+        const val METHOD_CHANNEL_WEBSOCKET_SERVICE_DISCONNECTED = "websocketServiceDisconnected"
+        const val METHOD_CHANNEL_WEBSOCKET_SERVICE_RESCONNECTED = "websocketServiceReconnected"
 
         lateinit var token: String
         lateinit var mainActivity: MainActivityI
