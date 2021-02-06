@@ -126,7 +126,7 @@ abstract class WebSocketBase: ModuleBase {
         socket.io().on("fake-notification") {
             println("Websocket: fake-notification")
             val ctx = CommonsModules.foregroundService!!
-            val mainClass = CommonsModules.mainClass!!
+            val mainClass = Commons.mainActivity::class.java
             val intent = Intent(ctx, mainClass)
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             ctx.startActivity(intent)

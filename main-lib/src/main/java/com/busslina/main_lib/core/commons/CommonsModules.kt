@@ -7,7 +7,7 @@ class CommonsModules {
 
     companion object {
 
-        var mainClass: Class<*>? = null
+//        var mainClass: Class<*>? = null
 
         var foregroundService: ForegroundServiceBase? = null
         var websocket: WebSocketBase? = null
