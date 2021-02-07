@@ -18,8 +18,8 @@ class Commons {
 //        const val METHOD_CHANNEL_WEBSOCKET_SERVICE_DISCONNECTED = "websocketServiceDisconnected"
 //        const val METHOD_CHANNEL_WEBSOCKET_SERVICE_RESCONNECTED = "websocketServiceReconnected"
 
-        lateinit var token: String
-        lateinit var mainActivity: MainActivityI
+        var token: String? = null
+        var mainActivity: MainActivityI? = null
 
         var preInitied = false
 
@@ -34,9 +34,14 @@ class Commons {
             preInitied = true
         }
 
+        fun clear() {
+            token = null
+            mainActivity = null
+        }
+
         fun sendMessageMethodChannel(method: String, args: Any?) {
             Handler(Looper.getMainLooper()).post {
-                mainActivity.sendMessageMethodChannel(method, args)
+                mainActivity!!.sendMessageMethodChannel(method, args)
             }
         }
 

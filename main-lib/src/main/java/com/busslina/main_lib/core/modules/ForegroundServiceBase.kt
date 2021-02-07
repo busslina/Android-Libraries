@@ -33,7 +33,7 @@ abstract class ForegroundServiceBase: Service {
 //            Commons.sendMessageMethodChannel(Commons.METHOD_CHANNEL_WEBSOCKET_SERVICE_CONNECTED, null)
 
 
-            Commons.mainActivity.stopForegroundService()
+            Commons.mainActivity!!.stopForegroundService()
         }
     }
 
@@ -109,6 +109,8 @@ abstract class ForegroundServiceBase: Service {
         if (WebSocketBase.enableWebsocketSubModule) {
             CommonsModules.websocket!!.stop()
         }
+
+        Commons.clear()
 
         state = STATE_STOPPED
         super.onDestroy()

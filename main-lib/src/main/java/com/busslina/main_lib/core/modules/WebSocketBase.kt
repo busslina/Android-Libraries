@@ -27,12 +27,12 @@ abstract class WebSocketBase: ModuleBase {
         }
     }
 
-    var socket: Socket? = null
+    private var socket: Socket? = null
 
-    var connected = false
-    var ruptureDisconnected = false
+    private var connected = false
+    private var ruptureDisconnected = false
 
-    var websocketId = -1
+    private var websocketId = -1
 
     /**
      * Constructor.
@@ -135,7 +135,7 @@ abstract class WebSocketBase: ModuleBase {
         socket!!.on("fake-notification") {
             println("Websocket: fake-notification")
             val ctx = CommonsModules.foregroundService!!
-            val mainClass = Commons.mainActivity::class.java
+            val mainClass = Commons.mainActivity!!::class.java
             val intent = Intent(ctx, mainClass)
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             ctx.startActivity(intent)
@@ -158,7 +158,7 @@ abstract class WebSocketBase: ModuleBase {
     private fun onSocketConnected(reconnection: Boolean) {
 
         // 1. Sending token & device type
-        val mapData: Map<String, Any> = mapOf("token" to Commons.token, "deviceType" to Utils.getDeviceType())
+        val mapData: Map<String, Any> = mapOf("token" to Commons.token!!, "deviceType" to Utils.getDeviceType())
         val data = JSONObject(mapData)
         socket!!.emit(Events.WS_SIGNAL_AUTH_TOKEN, data)
 
