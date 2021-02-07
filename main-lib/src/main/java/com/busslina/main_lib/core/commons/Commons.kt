@@ -32,6 +32,7 @@ class Commons {
 
         // Flutter      TO      Android (dev)
         const val METHOD_CHANNEL_IS_FOREGROUND_SERVICE_STARTED  = "isForegroundServiceStarted"
+        const val METHOD_CHANNEL_GET_HP_PENDING_OPERATION       = "getHighPriorityPendingOperation";
         const val METHOD_CHANNEL_MAIN_ACTIVITY_STARTED          = "mainActivityStarted"
         const val METHOD_CHANNEL_MAIN_ACTIVITY_AUTHENTICATED    = "mainActivityAuthenticated"
 
@@ -41,6 +42,15 @@ class Commons {
         const val METHOD_CHANNEL_CLOSE_APP                      = "closeApp"
 
 
+
+        // Pending operations
+        const val NO_PENDING_OPERATION                          = -1
+
+        // High priority
+        const val PENDING_OPERATION_HP_SESSION_KILLED           = 0
+        const val PENDING_OPERATION_HP_CLOSE_APP                = 1
+
+        // Low priority
 
 
         var token: String? = null
