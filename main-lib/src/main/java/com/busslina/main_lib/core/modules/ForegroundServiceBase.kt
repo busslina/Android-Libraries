@@ -104,6 +104,12 @@ abstract class ForegroundServiceBase: Service {
     }
 
     override fun onDestroy() {
+
+        // Websocket stop
+        if (WebSocketBase.enableWebsocketSubModule) {
+            CommonsModules.websocket!!.stop()
+        }
+
         state = STATE_STOPPED
         super.onDestroy()
     }
@@ -112,6 +118,7 @@ abstract class ForegroundServiceBase: Service {
      * Abstract functions
      *
      * - 01 - Get notification
+     * - 02- Create websocket sub-module
      */
 
     /**
@@ -119,6 +126,9 @@ abstract class ForegroundServiceBase: Service {
      */
     abstract fun getNotification(text: String = "This is running in background"): Notification
 
+    /**
+     * 02- Create websocket sub-module.
+     */
     abstract fun createWebsocketSubModule()
 
 
