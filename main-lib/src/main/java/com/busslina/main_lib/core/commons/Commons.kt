@@ -11,6 +11,8 @@ class Commons {
 
     companion object {
 
+        const val MODE_DEBUG = true
+
 
         // Flutter      TO      Android
         // Android      TO      Flutter
@@ -64,8 +66,12 @@ class Commons {
          * - 01 - Pre-init
          * - 02 - Clear
          * - 03 - Send message method channel
+         * - 04 - Debug
          */
 
+        /**
+         * 01 - Pre-init.
+         */
         fun preInit(mainActivity: MainActivityI, token: String) {
             if (preInitied) {
                 return
@@ -77,11 +83,18 @@ class Commons {
             preInitied = true
         }
 
+        /**
+         * 02 - Clear.
+         */
         fun clear() {
             token = null
             mainActivity = null
+            PendingOperations.clear()
         }
 
+        /**
+         * 03 - Send message method channel.
+         */
         fun sendMessageMethodChannel(method: String, args: Any?) {
 
             // TODO: MethodChannelQueue
@@ -91,10 +104,31 @@ class Commons {
             }
         }
 
+        /**
+         * 04 - Debug.
+         */
+        fun debug(msg: String) {
+            if (!MODE_DEBUG) {
+                return
+            }
+            println(msg)
+        }
+    }
+}
+
+class PendingOperations {
+
+    companion object {
+
+        var highPriorityPendingOperation = Commons.NO_PENDING_OPERATION
 
 
+        fun clear() {
+            highPriorityPendingOperation = Commons.NO_PENDING_OPERATION
+        }
 
-
-
+        fun setHighPriorityPendingOperationn(opCode: Int) {
+            highPriorityPendingOperation = opCode
+        }
     }
 }

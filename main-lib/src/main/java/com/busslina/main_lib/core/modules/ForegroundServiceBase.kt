@@ -9,6 +9,7 @@ import android.os.IBinder
 import androidx.core.app.NotificationCompat
 import com.busslina.main_lib.core.commons.Commons
 import com.busslina.main_lib.core.commons.CommonsModules
+import com.busslina.main_lib.core.commons.PendingOperations
 
 abstract class ForegroundServiceBase: Service {
 
@@ -27,10 +28,11 @@ abstract class ForegroundServiceBase: Service {
         }
 
         fun sessionKilled() {
-            TODO("ADVICE FLUTTER THAT SESSION WAS KILLED")
 
+            // TODO:
 
-//            Commons.sendMessageMethodChannel(Commons.METHOD_CHANNEL_WEBSOCKET_SERVICE_CONNECTED, null)
+            PendingOperations.setHighPriorityPendingOperationn(Commons.PENDING_OPERATION_HP_SESSION_KILLED)
+            Commons.sendMessageMethodChannel(Commons.METHOD_CHANNEL_SESSION_KILLED, null)
 
 
             Commons.mainActivity!!.stopForegroundService()

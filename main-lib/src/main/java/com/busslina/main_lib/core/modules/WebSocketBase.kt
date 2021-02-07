@@ -113,12 +113,12 @@ abstract class WebSocketBase: ModuleBase {
 
 
         socket!!.once("connect") {
-            println("Websocket: connect")
+            Commons.debug("Websocket: connect")
             onSocketConnected(false)
         }
 
         socket!!.on("disconnect") {
-            println("Websocket: disconnect")
+            Commons.debug("Websocket: disconnect")
             connected = false
             ruptureDisconnected = true
 
@@ -126,14 +126,14 @@ abstract class WebSocketBase: ModuleBase {
         }
 
         socket!!.io().on("reconnect") {
-            println("Websocket: reconnect")
+            Commons.debug("Websocket: reconnect")
             ruptureDisconnected = false
             onSocketConnected(true)
         }
 
         // Testing fake notification
         socket!!.on("fake-notification") {
-            println("Websocket: fake-notification")
+            Commons.debug("Websocket: fake-notification")
             val ctx = CommonsModules.foregroundService!!
             val mainClass = Commons.mainActivity!!::class.java
             val intent = Intent(ctx, mainClass)
@@ -164,7 +164,7 @@ abstract class WebSocketBase: ModuleBase {
 
         // 2. Receive assigned id
         socket!!.once(Events.WS_SIGNAL_ID_ASSIGNATION) { (id) ->
-            println("Assignated id: $id")
+            Commons.debug("Assignated id: $id")
             websocketId = id as Int
             connected = true
 
@@ -176,7 +176,7 @@ abstract class WebSocketBase: ModuleBase {
 
         // 3. Managing session killed
         socket!!.once(Events.WS_SIGNAL_SESSION_KILLED) {
-            println("Session killed")
+            Commons.debug("Session killed")
 
             stop()
             ForegroundServiceBase.sessionKilled()
