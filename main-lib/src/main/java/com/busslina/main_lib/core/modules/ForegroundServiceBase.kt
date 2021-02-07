@@ -1,8 +1,12 @@
 package com.busslina.main_lib.core.modules
 
+import android.app.Notification
+import android.app.PendingIntent
 import android.app.Service
 import android.content.Intent
+import android.os.Build
 import android.os.IBinder
+import androidx.core.app.NotificationCompat
 import com.busslina.main_lib.core.commons.Commons
 import com.busslina.main_lib.core.commons.CommonsModules
 
@@ -75,7 +79,20 @@ abstract class ForegroundServiceBase: Service {
      */
 
     override fun onCreate() {
+        state = STATE_STARTED
         super.onCreate()
+
+        // To foreground with notification
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val notification = getNotification("Aplicación iniciada")
+            startForeground(NOTIFICATION_ID, notification)
+        }
+
+        // Websocket init
+        if (WebSocketBase.enableWebsocketSubModule) {
+            createWebsocketSubModule()
+            CommonsModules.websocket!!.start()
+        }
     }
 
     override fun onBind(p0: Intent?): IBinder? {
@@ -87,8 +104,23 @@ abstract class ForegroundServiceBase: Service {
     }
 
     override fun onDestroy() {
+        state = STATE_STOPPED
         super.onDestroy()
     }
+
+    /**
+     * Abstract functions
+     *
+     * - 01 - Get notification
+     */
+
+    /**
+     * 01 - Get notification.
+     */
+    abstract fun getNotification(text: String = "This is running in background"): Notification
+
+    abstract fun createWebsocketSubModule()
+
 
 
 }
