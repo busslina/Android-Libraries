@@ -12,5 +12,10 @@ class CommonsModules {
         var foregroundService: ForegroundServiceBase? = null
         var websocket: WebSocketBase? = null
 
+        fun clear() {
+            foregroundService = null
+            websocket = null
+        }
+
     }
 }

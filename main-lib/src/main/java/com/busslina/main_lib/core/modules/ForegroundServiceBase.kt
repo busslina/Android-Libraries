@@ -111,6 +111,7 @@ abstract class ForegroundServiceBase: Service {
         }
 
         Commons.clear()
+        CommonsModules.clear()
 
         state = STATE_STOPPED
         super.onDestroy()
