@@ -27,7 +27,7 @@ abstract class WebSocketBase: ModuleBase {
         }
     }
 
-    lateinit var socket: Socket
+    var socket: Socket? = null
 
     var connected = false
     var ruptureDisconnected = false
@@ -46,6 +46,7 @@ abstract class WebSocketBase: ModuleBase {
      *
      * - 01 - Start
      * - 02 - Stop
+     * - 03 - Clear
      */
 
     //region
@@ -56,7 +57,6 @@ abstract class WebSocketBase: ModuleBase {
         if (isStarted()) {
             return
         }
-        resetState()
 
         connect()
 
@@ -72,8 +72,18 @@ abstract class WebSocketBase: ModuleBase {
         }
 
         disconnect()
+        clear()
 
         state = STATE_STOPPED
+    }
+
+    /**
+     * 03 - Clear.
+     */
+    override fun clear() {
+        connected = false
+        ruptureDisconnected = false
+        socket = null
     }
     //endregion
 
@@ -83,7 +93,6 @@ abstract class WebSocketBase: ModuleBase {
      * - 01 - Connect
      * - 02 - Disconnect
      * - 03 - On socket connected
-     * - 04 - Reset state
      */
 
     //region
@@ -103,12 +112,12 @@ abstract class WebSocketBase: ModuleBase {
         socket = IO.socket(url, options)
 
 
-        socket.once("connect") {
+        socket!!.once("connect") {
             println("Websocket: connect")
             onSocketConnected(false)
         }
 
-        socket.on("disconnect") {
+        socket!!.on("disconnect") {
             println("Websocket: disconnect")
             connected = false
             ruptureDisconnected = true
@@ -116,14 +125,14 @@ abstract class WebSocketBase: ModuleBase {
             // TODO: stuff
         }
 
-        socket.io().on("reconnect") {
+        socket!!.io().on("reconnect") {
             println("Websocket: reconnect")
             ruptureDisconnected = false
             onSocketConnected(true)
         }
 
         // Testing fake notification
-        socket.on("fake-notification") {
+        socket!!.on("fake-notification") {
             println("Websocket: fake-notification")
             val ctx = CommonsModules.foregroundService!!
             val mainClass = Commons.mainActivity::class.java
@@ -132,16 +141,15 @@ abstract class WebSocketBase: ModuleBase {
             ctx.startActivity(intent)
         }
 
-        socket.connect()
+        socket!!.connect()
     }
 
     /**
      * 02 - Disconnect.
      */
     private fun disconnect() {
-        socket.off("disconnect")
-        socket.disconnect()
-        resetState()
+        socket!!.off("disconnect")
+        socket!!.disconnect()
     }
 
     /**
@@ -152,33 +160,27 @@ abstract class WebSocketBase: ModuleBase {
         // 1. Sending token & device type
         val mapData: Map<String, Any> = mapOf("token" to Commons.token, "deviceType" to Utils.getDeviceType())
         val data = JSONObject(mapData)
-        socket.emit(Events.WS_SIGNAL_AUTH_TOKEN, data)
+        socket!!.emit(Events.WS_SIGNAL_AUTH_TOKEN, data)
 
         // 2. Receive assigned id
-        socket.once(Events.WS_SIGNAL_ID_ASSIGNATION) { (id) ->
+        socket!!.once(Events.WS_SIGNAL_ID_ASSIGNATION) { (id) ->
             println("Assignated id: $id")
             websocketId = id as Int
             connected = true
 
+            // Advice Flutter part
             Commons.sendMessageMethodChannel(Commons.METHOD_CHANNEL_WEBSOCKET_SERVICE_CONNECTED, null)
 
             // TODO: stuff
         }
 
         // 3. Managing session killed
-        socket.once(Events.WS_SIGNAL_SESSION_KILLED) {
+        socket!!.once(Events.WS_SIGNAL_SESSION_KILLED) {
             println("Session killed")
 
-            // TODO: stuff
+            stop()
+            ForegroundServiceBase.sessionKilled()
         }
-    }
-
-    /**
-     * 04 - Reset state.
-     */
-    private fun resetState() {
-        connected = false
-        ruptureDisconnected = false
     }
     //endregion
 }

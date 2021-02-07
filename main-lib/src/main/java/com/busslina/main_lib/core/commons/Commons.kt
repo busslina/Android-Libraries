@@ -15,8 +15,8 @@ class Commons {
         const val METHOD_CHANNEL_START_FOREGROUND_SERVICE       = "startForegoundService"
         const val METHOD_CHANNEL_STOP_FOREGROUND_SERVICE        = "stopForegoundService"
         const val METHOD_CHANNEL_WEBSOCKET_SERVICE_CONNECTED    = "websocketServiceConnected"
-        const val METHOD_CHANNEL_WEBSOCKET_SERVICE_DISCONNECTED = "websocketServiceDisconnected"
-        const val METHOD_CHANNEL_WEBSOCKET_SERVICE_RESCONNECTED = "websocketServiceReconnected"
+//        const val METHOD_CHANNEL_WEBSOCKET_SERVICE_DISCONNECTED = "websocketServiceDisconnected"
+//        const val METHOD_CHANNEL_WEBSOCKET_SERVICE_RESCONNECTED = "websocketServiceReconnected"
 
         lateinit var token: String
         lateinit var mainActivity: MainActivityI
