@@ -38,7 +38,7 @@ abstract class ForegroundServiceBase: Service {
             Commons.sendMessageMethodChannel(Commons.METHOD_CHANNEL_SESSION_KILLED, null)
 
 
-            Commons.mainActivity!!.stopForegroundService()
+            CommonsModules.foregroundService!!.stopSelf()
         }
     }
 
