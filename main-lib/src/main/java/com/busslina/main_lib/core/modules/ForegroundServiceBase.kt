@@ -32,13 +32,13 @@ abstract class ForegroundServiceBase: Service {
 
             // TODO:
 
-            throw Exception("Not implemented")
+            TODO()
 
 //            PendingOperations.setHighPriorityPendingOperationn(Commons.PENDING_OPERATION_HP_SESSION_KILLED)
-            Commons.sendMessageMethodChannel(Commons.METHOD_CHANNEL_SESSION_KILLED, null)
+//            Commons.sendMessageMethodChannel(Commons.METHOD_CHANNEL_SESSION_KILLED, null)
 
 
-            CommonsModules.foregroundService!!.stopSelf()
+//            CommonsModules.foregroundService!!.stopSelf()
         }
     }
 
@@ -126,7 +126,8 @@ abstract class ForegroundServiceBase: Service {
      * Abstract functions
      *
      * - 01 - Get notification
-     * - 02- Create websocket sub-module
+     * - 02 - Update notification
+     * - 03- Create websocket sub-module
      */
 
     /**
@@ -135,7 +136,12 @@ abstract class ForegroundServiceBase: Service {
     abstract fun getNotification(text: String = "This is running in background"): Notification
 
     /**
-     * 02- Create websocket sub-module.
+     * 02 - Update notification.
+     */
+    abstract fun updateNotification(text: String): Notification
+
+    /**
+     * 03- Create websocket sub-module.
      */
     abstract fun createWebsocketSubModule()
 
