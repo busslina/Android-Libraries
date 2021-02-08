@@ -138,7 +138,7 @@ abstract class ForegroundServiceBase: Service {
     /**
      * 02 - Update notification.
      */
-    abstract fun updateNotification(text: String): Notification
+    abstract fun updateNotification(text: String)
 
     /**
      * 03- Create websocket sub-module.
