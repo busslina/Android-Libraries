@@ -1,7 +1,9 @@
 package com.busslina.main_lib.core.commons
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import com.busslina.main_lib.core.interfaces.MainActivityI
@@ -25,6 +27,9 @@ class Commons {
         // Flutter      TO      Android
         const val METHOD_CHANNEL_START_FOREGROUND_SERVICE       = "startForegoundService"
         const val METHOD_CHANNEL_STOP_FOREGROUND_SERVICE        = "stopForegoundService"
+        const val METHOD_CHANNEL_IS_FOREGROUND_SERVICE_STARTED  = "isForegroundServiceStarted"
+        const val METHOD_CHANNEL_GET_HP_PENDING_OPERATION       = "getHighPriorityPendingOperation"
+        const val METHOD_CHANNEL_GET_LP_PENDING_OPERATION       = "getLowPriorityPendingOperation"
 
         // Android      TO      Flutter
         const val METHOD_CHANNEL_WEBSOCKET_SERVICE_CONNECTED    = "websocketServiceConnected"
@@ -33,9 +38,7 @@ class Commons {
 
 
         // Flutter      TO      Android (dev)
-        const val METHOD_CHANNEL_IS_FOREGROUND_SERVICE_STARTED  = "isForegroundServiceStarted"
-        const val METHOD_CHANNEL_GET_HP_PENDING_OPERATION       = "getHighPriorityPendingOperation";
-        const val METHOD_CHANNEL_GET_LP_PENDING_OPERATION       = "getLowPriorityPendingOperation";
+
 //        const val METHOD_CHANNEL_MAIN_ACTIVITY_STARTED          = "mainActivityStarted"
         const val METHOD_CHANNEL_MAIN_ACTIVITY_AUTHENTICATED    = "mainActivityAuthenticated"
 
@@ -62,8 +65,9 @@ class Commons {
         // Or other alternative: predefined list
 
 
-        var token: String? = null
         var mainActivity: MainActivityI? = null
+        var foregroundServiceIntent: Intent? = null
+        var token: String? = null
 
         var preInitied = false
 
@@ -73,18 +77,22 @@ class Commons {
          * - 01 - Pre-init
          * - 02 - Clear
          * - 03 - Send message method channel
-         * - 04 - Debug
+         * - 04 - Start foreground service
+         * - 05 - Stop foreground service
+         * - 06 - Debug
+         * - 07 - Check preinitied
          */
 
         /**
          * 01 - Pre-init.
          */
-        fun preInit(mainActivity: MainActivityI, token: String) {
+        fun preInit(mainActivity: MainActivityI, foregroundServiceIntent: Intent, token: String) {
             if (preInitied) {
                 return
             }
 
             this.mainActivity = mainActivity
+            this.foregroundServiceIntent = foregroundServiceIntent
             this.token = token
 
             preInitied = true
@@ -113,13 +121,44 @@ class Commons {
         }
 
         /**
-         * 04 - Debug.
+         * 04 - Start foreground service.
+         */
+        fun startForegroundService(): Boolean {
+            checkPreinitied()
+            if (ForegroundServiceBase.isStarted()) {
+                return false
+            }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                return (mainActivity!! as Activity).startForegroundService(foregroundServiceIntent) != null
+            } else {
+                return (mainActivity!! as Activity).startService(foregroundServiceIntent) != null
+            }
+        }
+
+        /**
+         * 05 - Stop foreground service.
+         */
+        fun stopForegroundService(): Boolean {
+            if (ForegroundServiceBase.isStopped()) {
+                return false
+            }
+            return (mainActivity!! as Activity).stopService(foregroundServiceIntent)
+        }
+
+        /**
+         * 06 - Debug.
          */
         fun debug(msg: String) {
             if (!MODE_DEBUG) {
                 return
             }
             println("DEBUG: $msg")
+        }
+
+        fun checkPreinitied() {
+            if (!preInitied) {
+                throw Exception("Commons is not preinitied")
+            }
         }
     }
 }
