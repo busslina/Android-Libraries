@@ -93,6 +93,8 @@ abstract class WebSocketBase: ModuleBase {
      * - 01 - Connect
      * - 02 - Disconnect
      * - 03 - On socket connected
+     * - 04 - Is connected
+     * - 05 - Is rupture connected
      */
 
     //region
@@ -181,6 +183,20 @@ abstract class WebSocketBase: ModuleBase {
             stop()
             ForegroundServiceBase.sessionKilled()
         }
+    }
+
+    /**
+     * 04 - Is connected.
+     */
+    fun isConnected(): Boolean {
+        return connected
+    }
+
+    /**
+     * 05 - Is rupture connected.
+     */
+    fun isRuptureConnected(): Boolean {
+        return ruptureDisconnected
     }
     //endregion
 }
