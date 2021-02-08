@@ -90,6 +90,7 @@ class Commons {
             token = null
             mainActivity = null
             PendingOperations.clear()
+            preInitied = false
         }
 
         /**
