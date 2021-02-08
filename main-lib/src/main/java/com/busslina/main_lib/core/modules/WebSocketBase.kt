@@ -159,6 +159,8 @@ abstract class WebSocketBase: ModuleBase {
 
         if (Commons.token == null) {
             print("Token is null")
+        } else {
+            print("Token: ${Commons.token}")
         }
 
         // 1. Sending token & device type
