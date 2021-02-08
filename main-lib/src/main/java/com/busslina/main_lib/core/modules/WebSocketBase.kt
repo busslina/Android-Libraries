@@ -148,7 +148,7 @@ abstract class WebSocketBase: ModuleBase {
      * 02 - Disconnect.
      */
     private fun disconnect() {
-        socket!!.off("disconnect")
+        socket!!.off()
         socket!!.disconnect()
     }
 
@@ -156,6 +156,10 @@ abstract class WebSocketBase: ModuleBase {
      * 03 - On socket connected.
      */
     private fun onSocketConnected(reconnection: Boolean) {
+
+        if (Commons.token == null) {
+            print("Token is null")
+        }
 
         // 1. Sending token & device type
         val mapData: Map<String, Any> = mapOf("token" to Commons.token!!, "deviceType" to Utils.getDeviceType())

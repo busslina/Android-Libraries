@@ -35,7 +35,7 @@ class Commons {
         // Flutter      TO      Android (dev)
         const val METHOD_CHANNEL_IS_FOREGROUND_SERVICE_STARTED  = "isForegroundServiceStarted"
         const val METHOD_CHANNEL_GET_HP_PENDING_OPERATION       = "getHighPriorityPendingOperation";
-        const val METHOD_CHANNEL_MAIN_ACTIVITY_STARTED          = "mainActivityStarted"
+//        const val METHOD_CHANNEL_MAIN_ACTIVITY_STARTED          = "mainActivityStarted"
         const val METHOD_CHANNEL_MAIN_ACTIVITY_AUTHENTICATED    = "mainActivityAuthenticated"
 
         // Android      TO      Flutter (dev)
@@ -111,7 +111,7 @@ class Commons {
             if (!MODE_DEBUG) {
                 return
             }
-            println(msg)
+            println("DEBUG: $msg")
         }
     }
 }
