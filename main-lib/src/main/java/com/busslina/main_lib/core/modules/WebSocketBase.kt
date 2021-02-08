@@ -157,6 +157,9 @@ abstract class WebSocketBase: ModuleBase {
      */
     private fun onSocketConnected(reconnection: Boolean) {
 
+        Commons.debug("onSocketConnected")
+        Commons.debug("reconnection: $reconnection")
+
         if (Commons.token == null) {
             print("Token is null")
         } else {
