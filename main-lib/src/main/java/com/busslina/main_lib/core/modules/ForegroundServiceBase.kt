@@ -10,6 +10,7 @@ import androidx.core.app.NotificationCompat
 import com.busslina.main_lib.core.commons.Commons
 import com.busslina.main_lib.core.commons.CommonsModules
 import com.busslina.main_lib.core.commons.PendingOperations
+import java.lang.Exception
 
 abstract class ForegroundServiceBase: Service {
 
@@ -31,7 +32,9 @@ abstract class ForegroundServiceBase: Service {
 
             // TODO:
 
-            PendingOperations.setHighPriorityPendingOperationn(Commons.PENDING_OPERATION_HP_SESSION_KILLED)
+            throw Exception("Not implemented")
+
+//            PendingOperations.setHighPriorityPendingOperationn(Commons.PENDING_OPERATION_HP_SESSION_KILLED)
             Commons.sendMessageMethodChannel(Commons.METHOD_CHANNEL_SESSION_KILLED, null)
 
 

@@ -157,15 +157,6 @@ abstract class WebSocketBase: ModuleBase {
      */
     private fun onSocketConnected(reconnection: Boolean) {
 
-        Commons.debug("onSocketConnected")
-        Commons.debug("reconnection: $reconnection")
-
-        if (Commons.token!! == null) {
-            print("Token is null")
-        } else {
-            print("Token: ${Commons.token}")
-        }
-
         // 1. Sending token & device type
         val mapData: Map<String, Any> = mapOf("token" to Commons.token!!, "deviceType" to Utils.getDeviceType())
         val data = JSONObject(mapData)

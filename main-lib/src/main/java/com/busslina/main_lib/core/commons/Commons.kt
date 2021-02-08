@@ -35,6 +35,7 @@ class Commons {
         // Flutter      TO      Android (dev)
         const val METHOD_CHANNEL_IS_FOREGROUND_SERVICE_STARTED  = "isForegroundServiceStarted"
         const val METHOD_CHANNEL_GET_HP_PENDING_OPERATION       = "getHighPriorityPendingOperation";
+        const val METHOD_CHANNEL_GET_LP_PENDING_OPERATION       = "getLowPriorityPendingOperation";
 //        const val METHOD_CHANNEL_MAIN_ACTIVITY_STARTED          = "mainActivityStarted"
         const val METHOD_CHANNEL_MAIN_ACTIVITY_AUTHENTICATED    = "mainActivityAuthenticated"
 
@@ -53,6 +54,12 @@ class Commons {
         const val PENDING_OPERATION_HP_CLOSE_APP                = 1
 
         // Low priority
+        // TODO:
+        // Chat message
+        // New delivery
+        // etc ...
+        // One option: add flag that means Low priority pending message
+        // Or other alternative: predefined list
 
 
         var token: String? = null
