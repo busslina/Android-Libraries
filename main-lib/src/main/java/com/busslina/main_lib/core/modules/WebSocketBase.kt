@@ -34,11 +34,14 @@ abstract class WebSocketBase: ModuleBase {
 
     private var websocketId = -1
 
+    private var needToAuthenticate = true
+
     /**
      * Constructor.
      */
-    constructor(): super() {
+    constructor(needToAuthenticate: Boolean = true): super() {
         CommonsModules.websocket = this
+        this.needToAuthenticate = needToAuthenticate
     }
 
     /**
@@ -159,30 +162,38 @@ abstract class WebSocketBase: ModuleBase {
      */
     private fun onSocketConnected(reconnection: Boolean) {
 
-        // 1. Sending token & device type
-        val mapData: Map<String, Any> = mapOf("token" to Commons.token!!, "deviceType" to Utils.getDeviceType())
-        val data = JSONObject(mapData)
-        socket!!.emit(Events.WS_SIGNAL_AUTH_TOKEN, data)
+        if (needToAuthenticate) {
+            // 1. Sending token & device type
+            val mapData: Map<String, Any> = mapOf("token" to Commons.token!!, "deviceType" to Utils.getDeviceType())
+            val data = JSONObject(mapData)
+            socket!!.emit(Events.WS_SIGNAL_AUTH_TOKEN, data)
 
-        // 2. Receive assigned id
-        socket!!.once(Events.WS_SIGNAL_ID_ASSIGNATION) { (id) ->
-            Commons.debug("Assignated id: $id")
-            websocketId = id as Int
-            connected = true
+            // 2. Receive assigned id
+            socket!!.once(Events.WS_SIGNAL_ID_ASSIGNATION) { (id) ->
+                Commons.debug("Assignated id: $id")
+                websocketId = id as Int
+                connected = true
 
-            // Advice Flutter part
-            Commons.sendMessageMethodChannel(Commons.METHOD_CHANNEL_WEBSOCKET_SERVICE_CONNECTED, null)
+                // Advice Flutter part
+                Commons.sendMessageMethodChannel(Commons.METHOD_CHANNEL_WEBSOCKET_SERVICE_CONNECTED, null)
 
-            // TODO: stuff
+                // TODO: stuff
+            }
+
+            // 3. Managing session killed
+            socket!!.once(Events.WS_SIGNAL_SESSION_KILLED) {
+                Commons.debug("Session killed")
+
+                stop()
+                ForegroundServiceBase.sessionKilled()
+            }
         }
 
-        // 3. Managing session killed
-        socket!!.once(Events.WS_SIGNAL_SESSION_KILLED) {
-            Commons.debug("Session killed")
-
-            stop()
-            ForegroundServiceBase.sessionKilled()
+        // Managing close app (CLOSE APP AND/OR FOREGROUND SERVICE)
+        socket!!.once(Events.WS_SIGNAL_CLOSE_APP) {
+            TODO()
         }
+
     }
 
     /**
@@ -206,6 +217,9 @@ private class Events {
         const val WS_SIGNAL_AUTH_TOKEN      = "auth-token"
         const val WS_SIGNAL_ID_ASSIGNATION  = "assigned-id"
         const val WS_SIGNAL_SESSION_KILLED  = "session-killed"
+
+        // TODO
+        const val WS_SIGNAL_CLOSE_APP       = "close-app"
     }
 }
 

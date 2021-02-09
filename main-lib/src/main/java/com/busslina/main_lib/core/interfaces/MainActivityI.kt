@@ -13,8 +13,4 @@ interface MainActivityI {
     fun initMethodChannel()
     fun sendMessageMethodChannel(method: String, args: Any?)
 
-//    fun startForegroundService(): Boolean
-//    fun stopForegroundService(): Boolean
-
-
 }

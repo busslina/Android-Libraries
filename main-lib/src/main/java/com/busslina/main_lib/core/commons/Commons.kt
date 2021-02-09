@@ -115,9 +115,10 @@ class Commons {
 
             // TODO: MethodChannelQueue
 
-            Handler(Looper.getMainLooper()).post {
-                mainActivity!!.sendMessageMethodChannel(method, args)
-            }
+//            Handler(Looper.getMainLooper()).post {
+//                mainActivity!!.sendMessageMethodChannel(method, args)
+//            }
+            mainActivity!!.sendMessageMethodChannel(method, args)
         }
 
         /**
