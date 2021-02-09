@@ -192,6 +192,8 @@ abstract class WebSocketBase: ModuleBase {
                 stop()
                 ForegroundServiceBase.sessionKilled()
             }
+        } else {
+            connected = true
         }
 
         // Managing close app (CLOSE APP AND/OR FOREGROUND SERVICE)
@@ -208,7 +210,7 @@ abstract class WebSocketBase: ModuleBase {
             Commons.debug("Cannot emit because is disconnected")
             return
         }
-        Commons.debug("Cannot emit because is disconnected")
+        Commons.debug("Socket emitting: $event : $data")
         socket!!.emit(event, data)
     }
 
