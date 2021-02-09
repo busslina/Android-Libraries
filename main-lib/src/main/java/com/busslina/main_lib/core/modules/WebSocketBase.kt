@@ -97,8 +97,9 @@ abstract class WebSocketBase: ModuleBase {
      * - 01 - Connect
      * - 02 - Disconnect
      * - 03 - On socket connected
-     * - 04 - Is connected
-     * - 05 - Is rupture connected
+     * - 04 - Emit
+     * - 05 - Is connected
+     * - 06 - Is rupture connected
      */
 
     //region
@@ -197,18 +198,29 @@ abstract class WebSocketBase: ModuleBase {
         socket!!.once(Events.WS_SIGNAL_CLOSE_APP) {
             TODO()
         }
-
     }
 
     /**
-     * 04 - Is connected.
+     * 06 - Emit.
+     */
+    fun emit(event: String, data: String = "") {
+        if (!connected) {
+            Commons.debug("Cannot emit because is disconnected")
+            return
+        }
+        Commons.debug("Cannot emit because is disconnected")
+        socket!!.emit(event, data)
+    }
+
+    /**
+     * 05 - Is connected.
      */
     fun isConnected(): Boolean {
         return connected
     }
 
     /**
-     * 05 - Is rupture connected.
+     * 06 - Is rupture connected.
      */
     fun isRuptureConnected(): Boolean {
         return ruptureDisconnected
