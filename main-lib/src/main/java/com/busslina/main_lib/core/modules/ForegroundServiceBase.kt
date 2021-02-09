@@ -95,6 +95,7 @@ abstract class ForegroundServiceBase: Service {
 
         // Websocket init
         if (WebSocketBase.enableWebsocketSubModule) {
+            Commons.debug("Websocket init")
             createWebsocketSubModule()
             CommonsModules.websocket!!.start()
         }

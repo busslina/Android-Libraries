@@ -60,6 +60,7 @@ abstract class WebSocketBase: ModuleBase {
         if (isStarted()) {
             return
         }
+        Commons.debug("Websocket start")
 
         connect()
 
@@ -108,6 +109,7 @@ abstract class WebSocketBase: ModuleBase {
         if (!preInitied) {
             throw Exception("WebSocket not preinitied")
         }
+        Commons.debug("Websocket connect")
 
         val options = IO.Options.builder()
                 .setForceNew(false)
@@ -161,6 +163,8 @@ abstract class WebSocketBase: ModuleBase {
      * 03 - On socket connected.
      */
     private fun onSocketConnected(reconnection: Boolean) {
+
+        Commons.debug("Websocket onSocketConnected")
 
         if (needToAuthenticate) {
             // 1. Sending token & device type
