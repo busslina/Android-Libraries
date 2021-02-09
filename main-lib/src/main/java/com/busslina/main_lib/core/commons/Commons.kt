@@ -32,6 +32,7 @@ class Commons {
         const val METHOD_CHANNEL_GET_LP_PENDING_OPERATION       = "getLowPriorityPendingOperation"
 
         // Android      TO      Flutter
+        const val METHOD_CHANNEL_FOREGROUND_SERVICE_STARTED     = "foregroundServiceStarted"
         const val METHOD_CHANNEL_WEBSOCKET_SERVICE_CONNECTED    = "websocketServiceConnected"
 
 
@@ -111,7 +112,7 @@ class Commons {
         /**
          * 03 - Send message method channel.
          */
-        fun sendMessageMethodChannel(method: String, args: Any?) {
+        fun sendMessageMethodChannel(method: String, args: Any? = null) {
 
             // TODO: MethodChannelQueue
 

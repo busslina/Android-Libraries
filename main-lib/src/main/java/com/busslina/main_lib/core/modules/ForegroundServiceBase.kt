@@ -98,6 +98,9 @@ abstract class ForegroundServiceBase: Service {
             createWebsocketSubModule()
             CommonsModules.websocket!!.start()
         }
+
+        // Advice Flutter part
+        Commons.sendMessageMethodChannel(Commons.METHOD_CHANNEL_FOREGROUND_SERVICE_STARTED)
     }
 
     override fun onBind(p0: Intent?): IBinder? {
