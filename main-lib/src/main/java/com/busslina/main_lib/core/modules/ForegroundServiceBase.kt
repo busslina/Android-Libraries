@@ -1,5 +1,6 @@
 package com.busslina.main_lib.core.modules
 
+import android.app.AlarmManager
 import android.app.Notification
 import android.app.PendingIntent
 import android.app.Service
@@ -8,6 +9,7 @@ import android.content.Intent
 import android.os.Build
 import android.os.IBinder
 import android.os.PowerManager
+import android.os.SystemClock
 import androidx.core.app.NotificationCompat
 import com.busslina.main_lib.core.commons.Commons
 import com.busslina.main_lib.core.commons.CommonsModules
@@ -113,8 +115,12 @@ abstract class ForegroundServiceBase: Service {
      * - 02 - On bind
      * - 03 - On start command
      * - 04 - On destroy
+     * - 05 - On task removed
      */
 
+    /**
+     * 01 - On create.
+     */
     override fun onCreate() {
         state = STATE_STARTED
         super.onCreate()
@@ -136,10 +142,16 @@ abstract class ForegroundServiceBase: Service {
         Commons.sendMessageMethodChannel(Commons.METHOD_CHANNEL_FOREGROUND_SERVICE_STARTED)
     }
 
+    /**
+     * 02 - On bind.
+     */
     override fun onBind(p0: Intent?): IBinder? {
         return null
     }
 
+    /**
+     * 03 - On start command.
+     */
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         onStartCommandCount++
 
@@ -151,6 +163,9 @@ abstract class ForegroundServiceBase: Service {
         return START_STICKY
     }
 
+    /**
+     * 04 - On destroy.
+     */
     override fun onDestroy() {
 
         // Websocket stop
@@ -167,6 +182,24 @@ abstract class ForegroundServiceBase: Service {
 
         state = STATE_STOPPED
         super.onDestroy()
+    }
+
+    /**
+     * 05 - On task removed.
+     */
+    override fun onTaskRemoved(rootIntent: Intent?) {
+//        super.onTaskRemoved(rootIntent)
+
+        val restartServiceIntent = Intent(applicationContext, Commons.foregroundServiceClass).also {
+            it.setPackage(packageName)
+        }
+
+        val restartServicePendingIntent: PendingIntent = PendingIntent.getService(this, 1, restartServiceIntent, PendingIntent.FLAG_ONE_SHOT)
+
+        val alarmService: AlarmManager = applicationContext.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+
+        alarmService.set(AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime() + 1000, restartServicePendingIntent)
+
     }
 
     /**

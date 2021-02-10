@@ -66,10 +66,12 @@ class Commons {
         // Or other alternative: predefined list
 
 
-        var acquireLock = false
         var mainActivity: MainActivityI? = null
         var foregroundServiceIntent: Intent? = null
         var token: String? = null
+        var mainActivityClass: Class<*>? = null
+        var foregroundServiceClass: Class<*>? = null
+        var acquireLock = false
 
         var preInitied = false
 
@@ -88,15 +90,22 @@ class Commons {
         /**
          * 01 - Pre-init.
          */
-        fun preInit(acquireLock: Boolean, mainActivity: MainActivityI, foregroundServiceIntent: Intent, token: String) {
+        fun preInit(mainActivity: MainActivityI,
+                    foregroundServiceIntent: Intent,
+                    token: String,
+                    mainActivityClass: Class<*>,
+                    foregroundServiceClass: Class<*>,
+                    acquireLock: Boolean = false) {
             if (preInitied) {
                 return
             }
 
-            this.acquireLock = acquireLock
             this.mainActivity = mainActivity
             this.foregroundServiceIntent = foregroundServiceIntent
             this.token = token
+            this.mainActivityClass = mainActivityClass
+            this.foregroundServiceClass = foregroundServiceClass
+            this.acquireLock = acquireLock
 
             preInitied = true
         }
