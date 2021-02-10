@@ -3,9 +3,11 @@ package com.busslina.main_lib.core.modules
 import android.app.Notification
 import android.app.PendingIntent
 import android.app.Service
+import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.IBinder
+import android.os.PowerManager
 import androidx.core.app.NotificationCompat
 import com.busslina.main_lib.core.commons.Commons
 import com.busslina.main_lib.core.commons.CommonsModules
@@ -42,7 +44,12 @@ abstract class ForegroundServiceBase: Service {
         }
     }
 
-    var state = STATE_STOPPED
+    private var state = STATE_STOPPED
+
+    private var wakeLock: PowerManager.WakeLock? = null
+
+    // TESTING
+    var onStartCommandCount = 0
 
     /**
      * Constructor.
@@ -109,7 +116,27 @@ abstract class ForegroundServiceBase: Service {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        return super.onStartCommand(intent, flags, startId)
+        onStartCommandCount++
+
+        // Get lock
+        wakeLock = (getSystemService(Context.POWER_SERVICE) as PowerManager).run {
+            newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "ForegroudService::lock").apply {
+                acquire()
+            }
+        }
+
+//        }
+
+//        PowerManager.WakeLock(PowerManager.PARTIAL_WAKE_LOCK)
+
+        // Lock
+//        wakeLock = (getSystemService((Context.POWER_SERVICE) as PowerManager).run {
+//
+//        })
+
+
+//        return super.onStartCommand(intent, flags, startId)
+        return START_STICKY
     }
 
     override fun onDestroy() {
@@ -121,6 +148,13 @@ abstract class ForegroundServiceBase: Service {
 
         Commons.clear()
         CommonsModules.clear()
+
+
+
+        // Clear lock
+        if (wakeLock != null && wakeLock!!.isHeld) {
+            wakeLock!!.release()
+        }
 
         state = STATE_STOPPED
         super.onDestroy()

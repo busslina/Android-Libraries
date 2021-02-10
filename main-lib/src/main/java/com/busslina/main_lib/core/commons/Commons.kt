@@ -141,6 +141,7 @@ class Commons {
          * 05 - Stop foreground service.
          */
         fun stopForegroundService(): Boolean {
+            checkPreinitied()
             if (ForegroundServiceBase.isStopped()) {
                 return false
             }
