@@ -47,6 +47,7 @@ abstract class ForegroundServiceBase: Service {
     private var state = STATE_STOPPED
 
     private var wakeLock: PowerManager.WakeLock? = null
+    private var lockAcquired = false
 
     // TESTING
     var onStartCommandCount = 0
@@ -63,6 +64,8 @@ abstract class ForegroundServiceBase: Service {
      *
      * - 01 - Is stopped
      * - 02 - Is started
+     * - 03 - Acquire lock
+     * - 04 - Release lock
      */
 
     //region
@@ -78,6 +81,28 @@ abstract class ForegroundServiceBase: Service {
      */
     fun isStarted(): Boolean {
         return state == STATE_STARTED
+    }
+
+    fun acquireLock() {
+        if (lockAcquired) {
+            return
+        }
+        wakeLock = (getSystemService(Context.POWER_SERVICE) as PowerManager).run {
+            newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "ForegroudService::lock").apply {
+                acquire()
+                lockAcquired = true
+            }
+        }
+    }
+
+    fun releaseLock() {
+        if (!lockAcquired) {
+            return
+        }
+        if (wakeLock != null && wakeLock!!.isHeld) {
+            wakeLock!!.release()
+        }
+        lockAcquired = false
     }
     //endregion
 
@@ -118,24 +143,11 @@ abstract class ForegroundServiceBase: Service {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         onStartCommandCount++
 
-        // Get lock
-        wakeLock = (getSystemService(Context.POWER_SERVICE) as PowerManager).run {
-            newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "ForegroudService::lock").apply {
-                acquire()
-            }
+        // Acquire lock
+        if (Commons.acquireLock) {
+            acquireLock()
         }
 
-//        }
-
-//        PowerManager.WakeLock(PowerManager.PARTIAL_WAKE_LOCK)
-
-        // Lock
-//        wakeLock = (getSystemService((Context.POWER_SERVICE) as PowerManager).run {
-//
-//        })
-
-
-//        return super.onStartCommand(intent, flags, startId)
         return START_STICKY
     }
 
@@ -146,15 +158,12 @@ abstract class ForegroundServiceBase: Service {
             CommonsModules.websocket!!.stop()
         }
 
+        // Clear
         Commons.clear()
         CommonsModules.clear()
 
-
-
-        // Clear lock
-        if (wakeLock != null && wakeLock!!.isHeld) {
-            wakeLock!!.release()
-        }
+        // Release lock
+        releaseLock()
 
         state = STATE_STOPPED
         super.onDestroy()
