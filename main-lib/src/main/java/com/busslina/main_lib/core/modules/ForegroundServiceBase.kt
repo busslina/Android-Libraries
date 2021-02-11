@@ -40,7 +40,7 @@ abstract class ForegroundServiceBase: Service {
             return CommonsModules.foregroundService != null && CommonsModules.foregroundService!!.isStarted()
         }
 
-        fun preInit(token: String?, acquireLock: Boolean) {
+        fun preInit(token: String? = null, acquireLock: Boolean = false) {
             if (preInitied) {
                 return
             }
