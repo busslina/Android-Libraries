@@ -68,10 +68,8 @@ class Commons {
 
         var mainActivity: MainActivityI? = null
         var foregroundServiceIntent: Intent? = null
-        var token: String? = null
         var mainActivityClass: Class<*>? = null
         var foregroundServiceClass: Class<*>? = null
-        var acquireLock = false
 
         var preInitied = false
 
@@ -92,20 +90,18 @@ class Commons {
          */
         fun preInit(mainActivity: MainActivityI,
                     foregroundServiceIntent: Intent,
-                    token: String,
                     mainActivityClass: Class<*>,
                     foregroundServiceClass: Class<*>,
-                    acquireLock: Boolean = false) {
+        ) {
             if (preInitied) {
                 return
             }
 
             this.mainActivity = mainActivity
             this.foregroundServiceIntent = foregroundServiceIntent
-            this.token = token
             this.mainActivityClass = mainActivityClass
             this.foregroundServiceClass = foregroundServiceClass
-            this.acquireLock = acquireLock
+
 
             preInitied = true
         }
@@ -114,7 +110,6 @@ class Commons {
          * 02 - Clear.
          */
         fun clear() {
-            token = null
             mainActivity = null
             PendingOperations.clear()
             preInitied = false
@@ -170,7 +165,7 @@ class Commons {
         }
 
         fun checkPreinitied() {
-            if (!preInitied) {
+            if (!preInitied || ForegroundServiceBase.preInitied) {
                 throw Exception("Commons is not preinitied")
             }
         }

@@ -10,8 +10,10 @@ import android.os.Build
 import android.os.IBinder
 import android.os.PowerManager
 import android.os.SystemClock
+import android.os.SystemClock.elapsedRealtime
 import androidx.core.app.NotificationCompat
 import com.busslina.main_lib.core.commons.Commons
+import com.busslina.main_lib.core.commons.Commons.Companion.debug
 import com.busslina.main_lib.core.commons.CommonsModules
 import com.busslina.main_lib.core.commons.PendingOperations
 import java.lang.Exception
@@ -24,12 +26,34 @@ abstract class ForegroundServiceBase: Service {
         const val STATE_STOPPED = 0
         const val STATE_STARTED = 1
 
+        var token: String? = null
+        var acquireLock = false
+
+        var preInitied = false
+
+
         fun isStopped(): Boolean {
             return CommonsModules.foregroundService != null && CommonsModules.foregroundService!!.isStopped()
         }
 
         fun isStarted(): Boolean {
             return CommonsModules.foregroundService != null && CommonsModules.foregroundService!!.isStarted()
+        }
+
+        fun preInit(token: String?, acquireLock: Boolean) {
+            if (preInitied) {
+                return
+            }
+
+            this.token = token
+            this.acquireLock = acquireLock
+
+            preInitied = true
+        }
+
+        fun clear() {
+            token = null
+            acquireLock = false
         }
 
         fun sessionKilled() {
@@ -133,7 +157,7 @@ abstract class ForegroundServiceBase: Service {
 
         // Websocket init
         if (WebSocketBase.enableWebsocketSubModule) {
-            Commons.debug("Websocket init")
+            debug("Websocket init")
             createWebsocketSubModule()
             CommonsModules.websocket!!.start()
         }
@@ -156,7 +180,7 @@ abstract class ForegroundServiceBase: Service {
         onStartCommandCount++
 
         // Acquire lock
-        if (Commons.acquireLock) {
+        if (acquireLock) {
             acquireLock()
         }
 
@@ -174,6 +198,7 @@ abstract class ForegroundServiceBase: Service {
         }
 
         // Clear
+        clear()
         Commons.clear()
         CommonsModules.clear()
 
@@ -198,7 +223,7 @@ abstract class ForegroundServiceBase: Service {
 
         val alarmService: AlarmManager = applicationContext.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
-        alarmService.set(AlarmManager.ELAPSED_REALTIME, SystemClock.elapsedRealtime() + 1000, restartServicePendingIntent)
+        alarmService.set(AlarmManager.ELAPSED_REALTIME, elapsedRealtime() + 1000, restartServicePendingIntent)
 
     }
 

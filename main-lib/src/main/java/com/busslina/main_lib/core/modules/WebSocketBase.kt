@@ -3,6 +3,7 @@ package com.busslina.main_lib.core.modules
 import android.content.Intent
 import com.busslina.main_lib.core.ModuleBase
 import com.busslina.main_lib.core.commons.Commons
+import com.busslina.main_lib.core.commons.Commons.Companion.debug
 import com.busslina.main_lib.core.commons.CommonsModules
 import io.socket.client.IO
 import io.socket.client.Socket
@@ -60,7 +61,7 @@ abstract class WebSocketBase: ModuleBase {
         if (isStarted()) {
             return
         }
-        Commons.debug("Websocket start")
+        debug("Websocket start")
 
         connect()
 
@@ -110,7 +111,7 @@ abstract class WebSocketBase: ModuleBase {
         if (!preInitied) {
             throw Exception("WebSocket not preinitied")
         }
-        Commons.debug("Websocket connect")
+        debug("Websocket connect")
 
         val options = IO.Options.builder()
                 .setForceNew(false)
@@ -121,12 +122,12 @@ abstract class WebSocketBase: ModuleBase {
 
 
         socket!!.once("connect") {
-            Commons.debug("Websocket: connect")
+            debug("Websocket: connect")
             onSocketConnected(false)
         }
 
         socket!!.on("disconnect") {
-            Commons.debug("Websocket: disconnect")
+            debug("Websocket: disconnect")
             connected = false
             ruptureDisconnected = true
 
@@ -134,14 +135,14 @@ abstract class WebSocketBase: ModuleBase {
         }
 
         socket!!.io().on("reconnect") {
-            Commons.debug("Websocket: reconnect")
+            debug("Websocket: reconnect")
             ruptureDisconnected = false
             onSocketConnected(true)
         }
 
         // Testing fake notification
         socket!!.on("fake-notification") {
-            Commons.debug("Websocket: fake-notification")
+            debug("Websocket: fake-notification")
             val ctx = CommonsModules.foregroundService!!
 //            val mainClass = Commons.mainActivity!!::class.java
             val intent = Intent(ctx, Commons.mainActivityClass)
@@ -165,17 +166,17 @@ abstract class WebSocketBase: ModuleBase {
      */
     private fun onSocketConnected(reconnection: Boolean) {
 
-        Commons.debug("Websocket onSocketConnected")
+        debug("Websocket onSocketConnected")
 
         if (needToAuthenticate) {
             // 1. Sending token & device type
-            val mapData: Map<String, Any> = mapOf("token" to Commons.token!!, "deviceType" to Utils.getDeviceType())
+            val mapData: Map<String, Any> = mapOf("token" to ForegroundServiceBase.token!!, "deviceType" to Utils.getDeviceType())
             val data = JSONObject(mapData)
             socket!!.emit(Events.WS_SIGNAL_AUTH_TOKEN, data)
 
             // 2. Receive assigned id
             socket!!.once(Events.WS_SIGNAL_ID_ASSIGNATION) { (id) ->
-                Commons.debug("Assignated id: $id")
+                debug("Assignated id: $id")
                 websocketId = id as Int
                 connected = true
 
@@ -187,7 +188,7 @@ abstract class WebSocketBase: ModuleBase {
 
             // 3. Managing session killed
             socket!!.once(Events.WS_SIGNAL_SESSION_KILLED) {
-                Commons.debug("Session killed")
+                debug("Session killed")
 
                 stop()
                 ForegroundServiceBase.sessionKilled()
@@ -207,10 +208,10 @@ abstract class WebSocketBase: ModuleBase {
      */
     fun emit(event: String, data: String = "") {
         if (!connected) {
-            Commons.debug("Cannot emit because is disconnected")
+            debug("Cannot emit because is disconnected")
             return
         }
-        Commons.debug("Socket emitting: $event : $data")
+        debug("Socket emitting: $event : $data")
         socket!!.emit(event, data)
     }
 
