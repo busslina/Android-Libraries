@@ -165,7 +165,7 @@ class Commons {
         }
 
         fun checkPreinitied() {
-            if (!preInitied || ForegroundServiceBase.preInitied) {
+            if (!preInitied || !ForegroundServiceBase.preInitied) {
                 throw Exception("Commons is not preinitied")
             }
         }
