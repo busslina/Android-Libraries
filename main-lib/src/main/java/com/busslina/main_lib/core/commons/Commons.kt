@@ -65,8 +65,8 @@ class Commons {
         // Or other alternative: predefined list
         //endregion
 
-        var permissionsResolved = false
-        var permissionsGranted = false
+        private var permissionsResolved = false
+        private var permissionsGranted = false
 
         var mainActivity: MainActivityI? = null
         var foregroundServiceIntent: Intent? = null

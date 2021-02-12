@@ -10,7 +10,28 @@ interface MainActivityI {
 
     var foregroundServiceIntent: Intent
 
+    /**
+     * Abstract functions
+     *
+     * - 01 - Request permissions
+     * - 02 - Init method channel
+     * - 03 - Send message method channel
+     */
+
+
+    /**
+     * 01 - Request permissions.
+     */
+    fun requestPermissions()
+
+    /**
+     * 02 - Init method channel.
+     */
     fun initMethodChannel()
+
+    /**
+     * 03 - Send message method channel.
+     */
     fun sendMessageMethodChannel(method: String, args: Any?)
 
 }
