@@ -16,13 +16,9 @@ class Commons {
         const val MODE_DEBUG = true
 
 
-        // Flutter      TO      Android
-        // Android      TO      Flutter
-        // Flutter      TO      Android (dev)
-        // Android      TO      Flutter (dev)
-
 
         // Method channel
+        //region
         const val DEFAULT_METHOD_CHANNEL_NAME                   = "myFlutterApp"
         // Flutter      TO      Android
         const val METHOD_CHANNEL_START_FOREGROUND_SERVICE       = "startForegoundService"
@@ -49,10 +45,11 @@ class Commons {
         const val METHOD_CHANNEL_CONTINUE                       = "continue"
         const val METHOD_CHANNEL_SESSION_KILLED                 = "sessionKilled"
         const val METHOD_CHANNEL_CLOSE_APP                      = "closeApp"
-
+        //endregion
 
 
         // Pending operations
+        //region
         const val NO_PENDING_OPERATION                          = -1
 
         // High priority
@@ -66,11 +63,7 @@ class Commons {
         // etc ...
         // One option: add flag that means Low priority pending message
         // Or other alternative: predefined list
-
-
-
-
-
+        //endregion
 
         var permissionsResolved = false
         var permissionsGranted = false
@@ -187,14 +180,24 @@ class Commons {
         /**
          * Permissions functions
          *
-         * - 01 - Advice permissions resolution
-         * - 02 - Advice permissions granted
-         * - 03 - Advice permissions not granted
+         * - 01 - Permissions granted
+         * - 02 - Advice permissions resolution
+         * - 03 - Advice permissions granted
+         * - 04 - Advice permissions not granted
          */
 
         //region
         /**
-         * 01 - Advice permissions resolution.
+         * 01 - Permissions granted.
+         */
+        fun permissionsGranted(granted: Boolean) {
+            permissionsGranted = granted
+            permissionsResolved = true
+            advicePermissionsResolution()
+        }
+
+        /**
+         * 02 - Advice permissions resolution.
          */
         fun advicePermissionsResolution() {
             if (!permissionsResolved) {
@@ -207,17 +210,17 @@ class Commons {
         }
 
         /**
-         * 02 - After permissions granted.
+         * 03 - After permissions granted.
          */
-        fun advicePermissionsGranted() {
+        private fun advicePermissionsGranted() {
             debug("Sending permissions granted")
             sendMessageMethodChannel(METHOD_CHANNEL_PERMISSIONS_GRANTED)
         }
 
         /**
-         * 03 - After permissions not granted.
+         * 04 - After permissions not granted.
          */
-        fun advicePermissionsNotGranted() {
+        private fun advicePermissionsNotGranted() {
             debug("Sending permissions not granted")
             sendMessageMethodChannel(METHOD_CHANNEL_PERMISSIONS_NOT_GRANTED)
         }
