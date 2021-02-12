@@ -180,15 +180,20 @@ class Commons {
         /**
          * Permissions functions
          *
-         * - 01 - Permissions granted
-         * - 02 - Advice permissions resolution
-         * - 03 - Advice permissions granted
-         * - 04 - Advice permissions not granted
+         * - 01 - Are permissions granted
+         * - 02 - Permissions granted
+         * - 03 - Advice permissions resolution
+         * - 04 - Advice permissions granted
+         * - 05 - Advice permissions not granted
          */
 
         //region
+        fun arePermissionsGranted(): Boolean {
+            return permissionsGranted
+        }
+
         /**
-         * 01 - Permissions granted.
+         * 02 - Permissions granted.
          */
         fun permissionsGranted(granted: Boolean) {
             permissionsGranted = granted
@@ -197,7 +202,7 @@ class Commons {
         }
 
         /**
-         * 02 - Advice permissions resolution.
+         * 03 - Advice permissions resolution.
          */
         fun advicePermissionsResolution() {
             if (!permissionsResolved) {
@@ -210,7 +215,7 @@ class Commons {
         }
 
         /**
-         * 03 - After permissions granted.
+         * 04 - After permissions granted.
          */
         private fun advicePermissionsGranted() {
             debug("Sending permissions granted")
@@ -218,7 +223,7 @@ class Commons {
         }
 
         /**
-         * 04 - After permissions not granted.
+         * 05 - After permissions not granted.
          */
         private fun advicePermissionsNotGranted() {
             debug("Sending permissions not granted")
