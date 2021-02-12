@@ -32,6 +32,8 @@ class Commons {
         const val METHOD_CHANNEL_GET_LP_PENDING_OPERATION       = "getLowPriorityPendingOperation"
 
         // Android      TO      Flutter
+        const val METHOD_CHANNEL_PERMISSIONS_GRANTED            = "permissionsGranted"
+        const val METHOD_CHANNEL_PERMISSIONS_NOT_GRANTED        = "permissionsNotGranted"
         const val METHOD_CHANNEL_FOREGROUND_SERVICE_STARTED     = "foregroundServiceStarted"
         const val METHOD_CHANNEL_WEBSOCKET_SERVICE_CONNECTED    = "websocketServiceConnected"
 
@@ -66,6 +68,13 @@ class Commons {
         // Or other alternative: predefined list
 
 
+
+
+
+
+        var permissionsResolved = false
+        var permissionsGranted = false
+
         var mainActivity: MainActivityI? = null
         var foregroundServiceIntent: Intent? = null
         var mainActivityClass: Class<*>? = null
@@ -85,6 +94,7 @@ class Commons {
          * - 07 - Check preinitied
          */
 
+        //region
         /**
          * 01 - Pre-init.
          */
@@ -164,11 +174,54 @@ class Commons {
             println("DEBUG: $msg")
         }
 
+        /**
+         * 07 - Check preinitied.
+         */
         fun checkPreinitied() {
             if (!preInitied || !ForegroundServiceBase.preInitied) {
                 throw Exception("Commons is not preinitied")
             }
         }
+        //endregion
+
+        /**
+         * Permissions functions
+         *
+         * - 01 - Advice permissions resolution
+         * - 02 - Advice permissions granted
+         * - 03 - Advice permissions not granted
+         */
+
+        //region
+        /**
+         * 01 - Advice permissions resolution.
+         */
+        fun advicePermissionsResolution() {
+            if (!permissionsResolved) {
+                throw java.lang.Exception("Permissions not resolved yet")
+            }
+            if (permissionsGranted) {
+                return advicePermissionsGranted()
+            }
+            advicePermissionsNotGranted()
+        }
+
+        /**
+         * 02 - After permissions granted.
+         */
+        fun advicePermissionsGranted() {
+            debug("Sending permissions granted")
+            sendMessageMethodChannel(METHOD_CHANNEL_PERMISSIONS_GRANTED)
+        }
+
+        /**
+         * 03 - After permissions not granted.
+         */
+        fun advicePermissionsNotGranted() {
+            debug("Sending permissions not granted")
+            sendMessageMethodChannel(METHOD_CHANNEL_PERMISSIONS_NOT_GRANTED)
+        }
+        //endregion
     }
 }
 
