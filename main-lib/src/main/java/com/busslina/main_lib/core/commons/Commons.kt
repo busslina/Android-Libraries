@@ -24,13 +24,16 @@ class Commons {
         const val METHOD_CHANNEL_IS_FOREGROUND_SERVICE_STARTED  = "isForegroundServiceStarted"
         const val METHOD_CHANNEL_GET_HP_PENDING_OPERATION       = "getHighPriorityPendingOperation"
         const val METHOD_CHANNEL_GET_LP_PENDING_OPERATION       = "getLowPriorityPendingOperation"
+        const val METHOD_CHANNEL_ENABLE_SCREEN_LOCK             = "enableScreenLock"
+        const val METHOD_CHANNEL_DISABLE_SCREEN_LOCK            = "disableScreenLock"
 
         // Android      TO      Flutter
         const val METHOD_CHANNEL_PERMISSIONS_GRANTED            = "permissionsGranted"
         const val METHOD_CHANNEL_PERMISSIONS_NOT_GRANTED        = "permissionsNotGranted"
         const val METHOD_CHANNEL_FOREGROUND_SERVICE_STARTED     = "foregroundServiceStarted"
         const val METHOD_CHANNEL_WEBSOCKET_SERVICE_CONNECTED    = "websocketServiceConnected"
-
+        const val METHOD_CHANNEL_SCREEN_LOCK_ENABLED            = "screenLockEnabled"
+        const val METHOD_CHANNEL_SCREEN_LOCK_DISABLED           = "screenLockDisabled"
 
 
 

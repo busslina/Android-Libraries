@@ -169,8 +169,6 @@ abstract class ForegroundServiceBase: Service {
         if (acquireLock) {
             acquireLock()
         }
-
-
     }
 
     /**
