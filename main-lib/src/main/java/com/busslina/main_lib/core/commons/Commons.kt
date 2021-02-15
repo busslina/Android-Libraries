@@ -181,6 +181,23 @@ class Commons {
                     return status
                 }
 
+                // Is Foreground Service started
+                METHOD_CHANNEL_IS_FOREGROUND_SERVICE_STARTED -> {
+                    return ForegroundServiceBase.isStarted()
+                }
+
+                // Get High Priority pending operation
+                METHOD_CHANNEL_GET_HP_PENDING_OPERATION -> {
+                    return PendingOperations.highPriorityPendingOperation
+                }
+
+                // Get Low Priority pending operations
+                METHOD_CHANNEL_GET_LP_PENDING_OPERATION -> {
+
+                    // TODO
+                    return NO_PENDING_OPERATION
+                }
+
                 METHOD_CHANNEL_ENABLE_SCREEN_LOCK -> {
                     enableScreenLock()
                     return true
