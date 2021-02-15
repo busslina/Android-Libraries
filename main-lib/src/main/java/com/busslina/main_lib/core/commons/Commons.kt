@@ -1,11 +1,8 @@
 package com.busslina.main_lib.core.commons
 
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import android.os.Build
-import android.os.Handler
-import android.os.Looper
 import android.view.WindowManager
 import com.busslina.main_lib.core.interfaces.MainActivityI
 import com.busslina.main_lib.core.modules.ForegroundServiceBase
@@ -145,7 +142,7 @@ class Commons {
 
                 // Method channel initied
                 METHOD_CHANNEL_METHOD_CHANNEL_INITIED -> {
-                    (CommonsModules.mainActivity as MainActivityI).afterMethodMethodInitied()
+                    (CommonsModules.mainActivity as MainActivityI).afterMethodChannelInitied()
                     return true
                 }
 

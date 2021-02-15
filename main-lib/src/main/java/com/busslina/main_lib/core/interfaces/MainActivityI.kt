@@ -38,6 +38,6 @@ interface MainActivityI {
     /**
      * 04 - After method channel initied.
      */
-    fun afterMethodMethodInitied()
+    fun afterMethodChannelInitied()
 
 }
