@@ -6,6 +6,7 @@ import android.content.Intent
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
+import android.view.WindowManager
 import com.busslina.main_lib.core.interfaces.MainActivityI
 import com.busslina.main_lib.core.modules.ForegroundServiceBase
 
@@ -86,6 +87,8 @@ class Commons {
          * - 05 - Stop foreground service
          * - 06 - Debug
          * - 07 - Check preinitied
+         * - 08 - Enable screen lock
+         * - 09 - Disable screen lock
          */
 
         //region
@@ -175,6 +178,26 @@ class Commons {
             if (!preInitied || !ForegroundServiceBase.preInitied) {
                 throw Exception("Commons is not preinitied")
             }
+        }
+
+        /**
+         * 08 - Enable screen lock.
+         */
+        fun enableScreenLock() {
+            if (CommonsModules.mainActivity == null) {
+                return
+            }
+            CommonsModules.mainActivity!!.window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        }
+
+        /**
+         * 09 - Disable screen lock.
+         */
+        fun disableScreenLock() {
+            if (CommonsModules.mainActivity == null) {
+                return
+            }
+            CommonsModules.mainActivity!!.window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         }
         //endregion
 
