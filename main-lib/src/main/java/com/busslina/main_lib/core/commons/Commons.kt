@@ -147,6 +147,7 @@ class Commons {
                     return true
                 }
             }
+            throw Exception("Not valid method channel message: $method")
         }
 
         /**
