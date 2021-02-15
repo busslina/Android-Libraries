@@ -9,6 +9,9 @@ import android.os.Looper
 import android.view.WindowManager
 import com.busslina.main_lib.core.interfaces.MainActivityI
 import com.busslina.main_lib.core.modules.ForegroundServiceBase
+import com.busslina.main_lib.core.modules.WebSocketBase
+import com.google.gson.Gson
+import com.google.gson.JsonObject
 
 class Commons {
 
@@ -136,8 +139,32 @@ class Commons {
             mainActivity!!.sendMessageMethodChannel(method, args)
         }
 
-        fun initBaseMethodChannel(method: String, args: Any? = null): Any {
+        fun initBaseMethodChannel(method: String, arguments: Any? = null): Any {
             when (method) {
+
+                // Start Foreground Service
+                METHOD_CHANNEL_START_FOREGROUND_SERVICE -> {
+                    if (ForegroundServiceBase.isStarted()) {
+                        debug("Foreground Service already started")
+                        return false
+                    }
+
+                    // Arguments
+                    if (arguments !is String) {
+                        return false
+                    }
+                    val arguments = arguments.toString()
+                    val jsonArgs = Gson().fromJson(arguments, JsonObject::class.java)
+                    val enableWebsocketSubModule = jsonArgs.get("enableWebsocketSubModule").asBoolean
+                    val websocketUrl = jsonArgs.get("websocketUrl").asString
+
+                    // Modules preinit (only first time)
+                    ForegroundServiceBase.preInit(acquireLock = true)
+                    WebSocketBase.preInit(enableWebsocketSubModule, websocketUrl)
+
+                    return startForegroundService()
+                }
+
                 METHOD_CHANNEL_ENABLE_SCREEN_LOCK -> {
                     enableScreenLock()
                     return true
