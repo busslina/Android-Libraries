@@ -191,7 +191,8 @@ abstract class ForegroundServiceBase: Service {
 //            acquireLock()
 //        }
 
-        return START_STICKY
+//        return START_STICKY
+        return START_NOT_STICKY
     }
 
     /**
