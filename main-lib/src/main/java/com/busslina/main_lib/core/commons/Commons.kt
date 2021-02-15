@@ -136,15 +136,15 @@ class Commons {
             mainActivity!!.sendMessageMethodChannel(method, args)
         }
 
-        fun initBaseMethodChannel(method: String, args: Any? = null) {
+        fun initBaseMethodChannel(method: String, args: Any? = null): Any {
             when (method) {
                 METHOD_CHANNEL_ENABLE_SCREEN_LOCK -> {
                     enableScreenLock()
-                    return
+                    return true
                 }
                 METHOD_CHANNEL_DISABLE_SCREEN_LOCK -> {
                     disableScreenLock()
-                    return
+                    return true
                 }
             }
         }
