@@ -23,6 +23,7 @@ class Commons {
         //region
         const val DEFAULT_METHOD_CHANNEL_NAME                   = "myFlutterApp"
         // Flutter      TO      Android
+        const val METHOD_CHANNEL_METHOD_CHANNEL_INITIED         = "methodChannelInitied"
         const val METHOD_CHANNEL_START_FOREGROUND_SERVICE       = "startForegoundService"
         const val METHOD_CHANNEL_STOP_FOREGROUND_SERVICE        = "stopForegoundService"
         const val METHOD_CHANNEL_IS_FOREGROUND_SERVICE_STARTED  = "isForegroundServiceStarted"
@@ -142,6 +143,12 @@ class Commons {
         fun initBaseMethodChannel(method: String, arguments: Any? = null): Any {
             when (method) {
 
+                // Method channel initied
+                METHOD_CHANNEL_METHOD_CHANNEL_INITIED -> {
+                    (CommonsModules.mainActivity as MainActivityI).afterMethodMethodInitied()
+                    return true
+                }
+
                 // Start Foreground Service
                 METHOD_CHANNEL_START_FOREGROUND_SERVICE -> {
                     if (ForegroundServiceBase.isStarted()) {
@@ -153,8 +160,8 @@ class Commons {
                     if (arguments !is String) {
                         return false
                     }
-                    val arguments = arguments.toString()
-                    val jsonArgs = Gson().fromJson(arguments, JsonObject::class.java)
+                    val args = arguments.toString()
+                    val jsonArgs = Gson().fromJson(args, JsonObject::class.java)
                     val enableWebsocketSubModule = jsonArgs.get("enableWebsocketSubModule").asBoolean
                     val websocketUrl = jsonArgs.get("websocketUrl").asString
 
@@ -163,6 +170,18 @@ class Commons {
                     WebSocketBase.preInit(enableWebsocketSubModule, websocketUrl)
 
                     return startForegroundService()
+                }
+
+                // Stop Foreground Service
+                METHOD_CHANNEL_STOP_FOREGROUND_SERVICE -> {
+                    debug("Trying to stop foreground service")
+                    if (ForegroundServiceBase.isStopped()) {
+                        debug("Already stopped")
+                        return false
+                    }
+                    debug("Stopping foreground service")
+                    val status = stopForegroundService()
+                    return status
                 }
 
                 METHOD_CHANNEL_ENABLE_SCREEN_LOCK -> {
