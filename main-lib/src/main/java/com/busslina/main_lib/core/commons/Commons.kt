@@ -15,8 +15,6 @@ class Commons {
 
         const val MODE_DEBUG = true
 
-
-
         // Method channel
         //region
         const val DEFAULT_METHOD_CHANNEL_NAME                   = "myFlutterApp"

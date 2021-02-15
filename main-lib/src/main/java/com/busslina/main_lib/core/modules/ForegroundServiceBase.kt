@@ -164,6 +164,13 @@ abstract class ForegroundServiceBase: Service {
 
         // Advice Flutter part
         Commons.sendMessageMethodChannel(Commons.METHOD_CHANNEL_FOREGROUND_SERVICE_STARTED)
+
+        // Acquire lock
+        if (acquireLock) {
+            acquireLock()
+        }
+
+
     }
 
     /**
@@ -179,10 +186,10 @@ abstract class ForegroundServiceBase: Service {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         onStartCommandCount++
 
-        // Acquire lock
-        if (acquireLock) {
-            acquireLock()
-        }
+//        // Acquire lock
+//        if (acquireLock) {
+//            acquireLock()
+//        }
 
         return START_STICKY
     }
