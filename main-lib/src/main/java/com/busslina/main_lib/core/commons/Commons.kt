@@ -83,12 +83,13 @@ class Commons {
          * - 01 - Pre-init
          * - 02 - Clear
          * - 03 - Send message method channel
-         * - 04 - Start foreground service
-         * - 05 - Stop foreground service
-         * - 06 - Debug
-         * - 07 - Check preinitied
-         * - 08 - Enable screen lock
-         * - 09 - Disable screen lock
+         * - 04 - Init base method channel
+         * - 05 - Start foreground service
+         * - 06 - Stop foreground service
+         * - 07 - Debug
+         * - 08 - Check preinitied
+         * - 09 - Enable screen lock
+         * - 10 - Disable screen lock
          */
 
         //region
@@ -135,8 +136,21 @@ class Commons {
             mainActivity!!.sendMessageMethodChannel(method, args)
         }
 
+        fun initBaseMethodChannel(method: String, args: Any? = null) {
+            when (method) {
+                METHOD_CHANNEL_ENABLE_SCREEN_LOCK -> {
+                    enableScreenLock()
+                    return
+                }
+                METHOD_CHANNEL_DISABLE_SCREEN_LOCK -> {
+                    disableScreenLock()
+                    return
+                }
+            }
+        }
+
         /**
-         * 04 - Start foreground service.
+         * 05 - Start foreground service.
          */
         fun startForegroundService(): Boolean {
             checkPreinitied()
@@ -151,7 +165,7 @@ class Commons {
         }
 
         /**
-         * 05 - Stop foreground service.
+         * 06 - Stop foreground service.
          */
         fun stopForegroundService(): Boolean {
             checkPreinitied()
@@ -162,7 +176,7 @@ class Commons {
         }
 
         /**
-         * 06 - Debug.
+         * 07 - Debug.
          */
         fun debug(msg: String) {
             if (!MODE_DEBUG) {
@@ -172,7 +186,7 @@ class Commons {
         }
 
         /**
-         * 07 - Check preinitied.
+         * 08 - Check preinitied.
          */
         fun checkPreinitied() {
             if (!preInitied || !ForegroundServiceBase.preInitied) {
@@ -181,23 +195,25 @@ class Commons {
         }
 
         /**
-         * 08 - Enable screen lock.
+         * 09 - Enable screen lock.
          */
         fun enableScreenLock() {
             if (CommonsModules.mainActivity == null) {
                 return
             }
             CommonsModules.mainActivity!!.window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+            sendMessageMethodChannel(METHOD_CHANNEL_SCREEN_LOCK_ENABLED)
         }
 
         /**
-         * 09 - Disable screen lock.
+         * 10 - Disable screen lock.
          */
         fun disableScreenLock() {
             if (CommonsModules.mainActivity == null) {
                 return
             }
             CommonsModules.mainActivity!!.window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+            sendMessageMethodChannel(METHOD_CHANNEL_SCREEN_LOCK_DISABLED)
         }
         //endregion
 
