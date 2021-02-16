@@ -28,6 +28,7 @@ class Commons {
         const val METHOD_CHANNEL_GET_LP_PENDING_OPERATION       = "getLowPriorityPendingOperation"
         const val METHOD_CHANNEL_ENABLE_SCREEN_LOCK             = "enableScreenLock"
         const val METHOD_CHANNEL_DISABLE_SCREEN_LOCK            = "disableScreenLock"
+        const val METHOD_CHANNEL_GET_SCREEN_LOCK_STATUS         = "getScreenLockStatus"
 
         // Android      TO      Flutter
         const val METHOD_CHANNEL_PERMISSIONS_GRANTED            = "permissionsGranted"
@@ -70,6 +71,7 @@ class Commons {
 
         private var permissionsResolved = false
         private var permissionsGranted = false
+        private var screenLocked = false
 
         var mainActivity: MainActivityI? = null
         var foregroundServiceIntent: Intent? = null
@@ -206,6 +208,10 @@ class Commons {
                     disableScreenLock()
                     return true
                 }
+
+                METHOD_CHANNEL_GET_SCREEN_LOCK_STATUS -> {
+                    return screenLocked
+                }
             }
             throw Exception("Not valid method channel message: $method")
         }
@@ -259,10 +265,11 @@ class Commons {
          * 09 - Enable screen lock.
          */
         fun enableScreenLock() {
-            if (CommonsModules.mainActivity == null) {
+            if (CommonsModules.mainActivity == null || screenLocked) {
                 return
             }
             CommonsModules.mainActivity!!.window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+            screenLocked = true
             sendMessageMethodChannel(METHOD_CHANNEL_SCREEN_LOCK_ENABLED)
         }
 
@@ -270,10 +277,11 @@ class Commons {
          * 10 - Disable screen lock.
          */
         fun disableScreenLock() {
-            if (CommonsModules.mainActivity == null) {
+            if (CommonsModules.mainActivity == null || !screenLocked) {
                 return
             }
             CommonsModules.mainActivity!!.window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+            screenLocked = false
             sendMessageMethodChannel(METHOD_CHANNEL_SCREEN_LOCK_DISABLED)
         }
         //endregion
