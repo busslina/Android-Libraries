@@ -70,7 +70,6 @@ class Commons {
 
         private var permissionsResolved = false
         private var permissionsGranted = false
-        private var screenLocked = false
 
         var mainActivity: MainActivityI? = null
         var foregroundServiceIntent: Intent? = null
@@ -219,10 +218,10 @@ class Commons {
             if (ForegroundServiceBase.isStarted()) {
                 return false
             }
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                return (mainActivity!! as Activity).startForegroundService(foregroundServiceIntent) != null
+            return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                (mainActivity!! as Activity).startForegroundService(foregroundServiceIntent) != null
             } else {
-                return (mainActivity!! as Activity).startService(foregroundServiceIntent) != null
+                (mainActivity!! as Activity).startService(foregroundServiceIntent) != null
             }
         }
 
@@ -260,11 +259,10 @@ class Commons {
          * 09 - Enable screen lock.
          */
         fun enableScreenLock() {
-            if (CommonsModules.mainActivity == null || screenLocked) {
+            if (CommonsModules.mainActivity == null) {
                 return
             }
             CommonsModules.mainActivity!!.window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-            screenLocked = true
             sendMessageMethodChannel(METHOD_CHANNEL_SCREEN_LOCK_ENABLED)
         }
 
@@ -272,11 +270,10 @@ class Commons {
          * 10 - Disable screen lock.
          */
         fun disableScreenLock() {
-            if (CommonsModules.mainActivity == null || !screenLocked) {
+            if (CommonsModules.mainActivity == null) {
                 return
             }
             CommonsModules.mainActivity!!.window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-            screenLocked = false
             sendMessageMethodChannel(METHOD_CHANNEL_SCREEN_LOCK_DISABLED)
         }
         //endregion
