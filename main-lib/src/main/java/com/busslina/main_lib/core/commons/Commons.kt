@@ -28,7 +28,6 @@ class Commons {
         const val METHOD_CHANNEL_GET_LP_PENDING_OPERATION       = "getLowPriorityPendingOperation"
         const val METHOD_CHANNEL_ENABLE_SCREEN_LOCK             = "enableScreenLock"
         const val METHOD_CHANNEL_DISABLE_SCREEN_LOCK            = "disableScreenLock"
-        const val METHOD_CHANNEL_GET_SCREEN_LOCK_STATUS         = "getScreenLockStatus"
 
         // Android      TO      Flutter
         const val METHOD_CHANNEL_PERMISSIONS_GRANTED            = "permissionsGranted"
@@ -207,10 +206,6 @@ class Commons {
                 METHOD_CHANNEL_DISABLE_SCREEN_LOCK -> {
                     disableScreenLock()
                     return true
-                }
-
-                METHOD_CHANNEL_GET_SCREEN_LOCK_STATUS -> {
-                    return screenLocked
                 }
             }
             throw Exception("Not valid method channel message: $method")
