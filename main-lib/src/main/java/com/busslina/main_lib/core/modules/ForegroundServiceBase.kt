@@ -259,12 +259,12 @@ abstract class ForegroundServiceBase: Service {
     /**
      * 01 - Get notification.
      */
-    abstract fun getNotification(text: String = notificationText, actionName: String? = null, actionValue: Any? = null): Notification
+    abstract fun getNotification(text: String? = notificationText, actionName: String? = null, actionValue: Any? = null): Notification
 
     /**
      * 02 - Update notification.
      */
-    abstract fun updateNotification(text: String = notificationText)
+    abstract fun updateNotification(text: String? = notificationText)
 
     /**
      * 03- Create websocket sub-module.
