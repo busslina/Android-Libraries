@@ -16,7 +16,7 @@ interface MainActivityI {
      * - 01 - Request permissions
      * - 02 - Init method channel
      * - 03 - Send message method channel
-     * - 04 - 04 - After method channel initied
+     * - 04 - After method channel initied
      */
 
 

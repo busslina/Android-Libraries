@@ -26,6 +26,8 @@ abstract class ForegroundServiceBase: Service {
         const val STATE_STOPPED = 0
         const val STATE_STARTED = 1
 
+        lateinit var notificationText: String
+
         var token: String? = null
         var acquireLock = false
 
@@ -109,6 +111,9 @@ abstract class ForegroundServiceBase: Service {
         return state == STATE_STARTED
     }
 
+    /**
+     * 03 - Acquire lock.
+     */
     fun acquireLock() {
         if (lockAcquired) {
             return
@@ -121,6 +126,9 @@ abstract class ForegroundServiceBase: Service {
         }
     }
 
+    /**
+     * 04 - Release lock.
+     */
     fun releaseLock() {
         if (!lockAcquired) {
             return
@@ -129,6 +137,12 @@ abstract class ForegroundServiceBase: Service {
             wakeLock!!.release()
         }
         lockAcquired = false
+    }
+
+    fun checkWebsocketSubModule() {
+        if (CommonsModules.websocket == null) {
+            throw Exception("WebSocket module not created")
+        }
     }
     //endregion
 
@@ -159,6 +173,7 @@ abstract class ForegroundServiceBase: Service {
         if (WebSocketBase.enableWebsocketSubModule) {
             debug("Websocket init")
             createWebsocketSubModule()
+            checkWebsocketSubModule()
             CommonsModules.websocket!!.start()
         }
 
@@ -244,7 +259,7 @@ abstract class ForegroundServiceBase: Service {
     /**
      * 01 - Get notification.
      */
-    abstract fun getNotification(text: String = "This is running in background"): Notification
+    abstract fun getNotification(text: String = notificationText, actionName: String? = null, actionValue: Any? = null): Notification
 
     /**
      * 02 - Update notification.
