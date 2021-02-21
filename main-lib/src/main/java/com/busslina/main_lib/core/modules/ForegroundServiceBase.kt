@@ -26,7 +26,7 @@ abstract class ForegroundServiceBase: Service {
         const val STATE_STOPPED = 0
         const val STATE_STARTED = 1
 
-        lateinit var notificationText: String
+        var notificationText: String? = null
 
         var token: String? = null
         var acquireLock = false
