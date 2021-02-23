@@ -208,7 +208,7 @@ class Commons {
                     return true
                 }
 
-                // Others, redirected to super handler
+                // Others, redirected to auth handler
                 else -> return Auth.initCustomMethodChannel(method, arguments)
             }
         }
