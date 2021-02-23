@@ -137,7 +137,7 @@ class Commons {
             mainActivity!!.sendMessageMethodChannel(method, args)
         }
 
-        fun initBaseMethodChannel(method: String, arguments: Any? = null): Any {
+        fun initBaseMethodChannel(method: String, arguments: Any? = null): Any? {
             when (method) {
 
                 // Method channel initied
