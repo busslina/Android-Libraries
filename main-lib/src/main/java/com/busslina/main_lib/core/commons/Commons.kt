@@ -2,6 +2,7 @@ package com.busslina.main_lib.core.commons
 
 import android.app.Activity
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Build
 import android.view.WindowManager
 import com.busslina.main_lib.core.interfaces.MainActivityI
@@ -72,6 +73,7 @@ class Commons {
         private var permissionsResolved = false
         private var permissionsGranted = false
 
+        var sharedPreferences: SharedPreferences? = null
         var mainActivity: MainActivityI? = null
         var foregroundServiceIntent: Intent? = null
         var mainActivityClass: Class<*>? = null
@@ -97,7 +99,9 @@ class Commons {
         /**
          * 01 - Pre-init.
          */
-        fun preInit(mainActivity: MainActivityI,
+        fun preInit(
+                    sharedPreferences: SharedPreferences,
+                    mainActivity: MainActivityI,
                     foregroundServiceIntent: Intent,
                     mainActivityClass: Class<*>,
                     foregroundServiceClass: Class<*>,
@@ -106,6 +110,7 @@ class Commons {
                 return
             }
 
+            this.sharedPreferences = sharedPreferences
             this.mainActivity = mainActivity
             this.foregroundServiceIntent = foregroundServiceIntent
             this.mainActivityClass = mainActivityClass
@@ -119,7 +124,7 @@ class Commons {
          * 02 - Clear.
          */
         fun clear() {
-            mainActivity = null
+//            mainActivity = null
             PendingOperations.clear()
             preInitied = false
         }
@@ -134,7 +139,8 @@ class Commons {
 //            Handler(Looper.getMainLooper()).post {
 //                mainActivity!!.sendMessageMethodChannel(method, args)
 //            }
-            mainActivity!!.sendMessageMethodChannel(method, args)
+//            mainActivity!!.sendMessageMethodChannel(method, args)
+            (mainActivity as MainActivityI).sendMessageMethodChannel(method, args)
         }
 
         fun initBaseMethodChannel(method: String, arguments: Any? = null): Any? {
@@ -142,7 +148,7 @@ class Commons {
 
                 // Method channel initied
                 METHOD_CHANNEL_METHOD_CHANNEL_INITIED -> {
-                    (CommonsModules.mainActivity as MainActivityI).afterMethodChannelInitied()
+                    (mainActivity as MainActivityI).afterMethodChannelInitied()
                     return true
                 }
 
@@ -222,9 +228,9 @@ class Commons {
                 return false
             }
             return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                (mainActivity!! as Activity).startForegroundService(foregroundServiceIntent) != null
+                (mainActivity as Activity).startForegroundService(foregroundServiceIntent) != null
             } else {
-                (mainActivity!! as Activity).startService(foregroundServiceIntent) != null
+                (mainActivity as Activity).startService(foregroundServiceIntent) != null
             }
         }
 
@@ -236,7 +242,7 @@ class Commons {
             if (ForegroundServiceBase.isStopped()) {
                 return false
             }
-            return (mainActivity!! as Activity).stopService(foregroundServiceIntent)
+            return (mainActivity as Activity).stopService(foregroundServiceIntent)
         }
 
         /**
@@ -262,10 +268,7 @@ class Commons {
          * 09 - Enable screen lock.
          */
         fun enableScreenLock() {
-            if (CommonsModules.mainActivity == null) {
-                return
-            }
-            CommonsModules.mainActivity!!.window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+            (mainActivity as Activity).window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
             sendMessageMethodChannel(METHOD_CHANNEL_SCREEN_LOCK_ENABLED)
         }
 
@@ -273,10 +276,7 @@ class Commons {
          * 10 - Disable screen lock.
          */
         fun disableScreenLock() {
-            if (CommonsModules.mainActivity == null) {
-                return
-            }
-            CommonsModules.mainActivity!!.window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+            (mainActivity as Activity).window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
             sendMessageMethodChannel(METHOD_CHANNEL_SCREEN_LOCK_DISABLED)
         }
 

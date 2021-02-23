@@ -8,7 +8,7 @@ class CommonsModules {
 
     companion object {
 
-        var mainActivity: Activity? = null
+//        var mainActivity: Activity? = null
 
         var foregroundService: ForegroundServiceBase? = null
         var websocket: WebSocketBase? = null
