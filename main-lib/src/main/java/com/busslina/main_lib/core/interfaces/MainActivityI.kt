@@ -5,6 +5,7 @@ import android.content.Intent
 interface MainActivityI {
 
     var foregroundServiceIntent: Intent
+    var lastIntentHash: Int?
 
     /**
      * Abstract functions

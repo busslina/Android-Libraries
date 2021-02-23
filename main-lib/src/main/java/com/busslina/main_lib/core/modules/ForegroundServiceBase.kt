@@ -179,8 +179,8 @@ abstract class ForegroundServiceBase: Service {
             CommonsModules.websocket!!.start()
         }
 
-        // Advice Flutter part
-        Commons.sendMessageMethodChannel(Commons.METHOD_CHANNEL_FOREGROUND_SERVICE_STARTED)
+        // Event handler
+        EventsHandler.foregroundServiceInitied()
 
         // Acquire lock
         if (acquireLock) {
@@ -201,11 +201,6 @@ abstract class ForegroundServiceBase: Service {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         onStartCommandCount++
 
-//        // Acquire lock
-//        if (acquireLock) {
-//            acquireLock()
-//        }
-
 //        return START_STICKY
         return START_NOT_STICKY
     }
@@ -215,15 +210,8 @@ abstract class ForegroundServiceBase: Service {
      */
     override fun onDestroy() {
 
-        // Websocket stop
-        if (WebSocketBase.enableWebsocketSubModule) {
-            CommonsModules.websocket!!.stop()
-        }
-
-        // Clear
-        clear()
-        Commons.clear(deepClear = false)
-        CommonsModules.clear()
+        // Event handler
+        EventsHandler.foregroundServiceClosed()
 
         // Release lock
         releaseLock()
