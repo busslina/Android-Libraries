@@ -99,7 +99,6 @@ abstract class ForegroundServiceBase: Service {
      * - 04 - Release lock
      */
 
-    //region
     /**
      * 01 - Is stopped.
      */
@@ -147,7 +146,6 @@ abstract class ForegroundServiceBase: Service {
             throw Exception("WebSocket module not created")
         }
     }
-    //endregion
 
     /**
      * Inherited functions
@@ -227,6 +225,8 @@ abstract class ForegroundServiceBase: Service {
     override fun onTaskRemoved(rootIntent: Intent?) {
 //        super.onTaskRemoved(rootIntent)
 
+        debug("onTaskRemoved()")
+
         val restartServiceIntent = Intent(applicationContext, Commons.foregroundServiceClass).also {
             it.setPackage(packageName)
         }
@@ -261,7 +261,4 @@ abstract class ForegroundServiceBase: Service {
      * 03- Create websocket sub-module.
      */
     abstract fun createWebsocketSubModule()
-
-
-
 }
