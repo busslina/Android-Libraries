@@ -1,6 +1,6 @@
 package com.busslina.main_lib.core.modules
 
-class NotificationsBase {
+abstract class NotificationsBase {
 
     companion object {
         const val NOTIFICATION_ID = 101
