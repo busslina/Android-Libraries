@@ -220,7 +220,7 @@ abstract class ForegroundServiceBase: Service {
 
         // Clear
         clear()
-        Commons.clear()
+        Commons.clear(deepClear = false)
         CommonsModules.clear()
 
         // Release lock

@@ -123,10 +123,21 @@ class Commons {
         /**
          * 02 - Clear.
          */
-        fun clear() {
-//            mainActivity = null
+        fun clear(deepClear: Boolean) {
+
+            // Deep clear
+            if (deepClear) {
+                sharedPreferences = null
+                mainActivity = null
+                foregroundServiceIntent = null
+                mainActivityClass = null
+                foregroundServiceClass = null
+
+                preInitied = false
+            }
+
+            // Soft clear
             PendingOperations.clear()
-            preInitied = false
         }
 
         /**
