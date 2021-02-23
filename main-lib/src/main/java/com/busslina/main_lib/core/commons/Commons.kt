@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Build
 import android.view.WindowManager
 import com.busslina.main_lib.core.interfaces.MainActivityI
+import com.busslina.main_lib.core.modules.Auth
 import com.busslina.main_lib.core.modules.ForegroundServiceBase
 import com.busslina.main_lib.core.modules.WebSocketBase
 import com.google.gson.Gson
@@ -93,7 +94,6 @@ class Commons {
          * - 10 - Disable screen lock
          */
 
-        //region
         /**
          * 01 - Pre-init.
          */
@@ -137,7 +137,7 @@ class Commons {
             mainActivity!!.sendMessageMethodChannel(method, args)
         }
 
-        fun initBaseMethodChannel(method: String, arguments: Any? = null): Any {
+        fun initBaseMethodChannel(method: String, arguments: Any? = null): Any? {
             when (method) {
 
                 // Method channel initied
@@ -155,6 +155,7 @@ class Commons {
 
                     // Arguments
                     if (arguments !is String) {
+                        debug("Bad arguments")
                         return false
                     }
                     val args = arguments.toString()
@@ -206,8 +207,10 @@ class Commons {
                     disableScreenLock()
                     return true
                 }
+
+                // Others, redirected to super handler
+                else -> return Auth.initCustomMethodChannel(method, arguments)
             }
-            throw Exception("Not valid method channel message: $method")
         }
 
         /**
@@ -276,7 +279,6 @@ class Commons {
             CommonsModules.mainActivity!!.window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
             sendMessageMethodChannel(METHOD_CHANNEL_SCREEN_LOCK_DISABLED)
         }
-        //endregion
 
         /**
          * Permissions functions
@@ -288,7 +290,6 @@ class Commons {
          * - 05 - Advice permissions not granted
          */
 
-        //region
         fun arePermissionsGranted(): Boolean {
             return permissionsGranted
         }
@@ -330,7 +331,6 @@ class Commons {
             debug("Sending permissions not granted")
             sendMessageMethodChannel(METHOD_CHANNEL_PERMISSIONS_NOT_GRANTED)
         }
-        //endregion
     }
 }
 
