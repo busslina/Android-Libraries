@@ -53,7 +53,6 @@ abstract class WebSocketBase: ModuleBase {
      * - 03 - Clear
      */
 
-    //region
     /**
      * 01 - Start.
      */
@@ -90,7 +89,6 @@ abstract class WebSocketBase: ModuleBase {
         ruptureDisconnected = false
         socket = null
     }
-    //endregion
 
     /**
      * Functions
@@ -103,7 +101,6 @@ abstract class WebSocketBase: ModuleBase {
      * - 06 - Is rupture connected
      */
 
-    //region
     /**
      * 01 - Connect.
      */
@@ -143,11 +140,11 @@ abstract class WebSocketBase: ModuleBase {
         // Testing fake notification
         socket!!.on("fake-notification") {
             debug("Websocket: fake-notification")
-            val ctx = CommonsModules.foregroundService!!
-//            val mainClass = Commons.mainActivity!!::class.java
-            val intent = Intent(ctx, Commons.mainActivityClass)
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            ctx.startActivity(intent)
+//            val ctx = CommonsModules.foregroundService!!
+//            val intent = Intent(ctx, Commons.mainActivityClass)
+//            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+//            ctx.startActivity(intent)
+            messageReceived("Pedro", "Hola mundo!")
         }
 
         socket!!.connect()
@@ -204,7 +201,7 @@ abstract class WebSocketBase: ModuleBase {
     }
 
     /**
-     * 06 - Emit.
+     * 04 - Emit.
      */
     fun emit(event: String, data: String = "") {
         if (!connected) {
@@ -228,7 +225,14 @@ abstract class WebSocketBase: ModuleBase {
     fun isRuptureConnected(): Boolean {
         return ruptureDisconnected
     }
-    //endregion
+
+    /**
+     * Abstract functions
+     *
+     * - 01 -
+     */
+
+    abstract fun messageReceived(sender: String, msg: String)
 }
 
 private class Events {

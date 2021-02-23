@@ -40,7 +40,6 @@ class Auth {
 
 
         // General data
-//        var token: String? = null
         var checkedLogged = false
         var locallyLogged = false
         var remotellyLogged = false
@@ -53,7 +52,19 @@ class Auth {
         var isRider: Boolean? = null
         var isPartner: Boolean? = null
 
+        /**
+         * Functions
+         *
+         * - 01 - Init custom method channel
+         * - 02 - Clear data
+         * - 03 - Set token
+         * - 04 - Get token
+         * - 05 - Clear token
+         */
 
+        /**
+         * 01 - Init custom method channel.
+         */
         fun initCustomMethodChannel(method: String, arguments: Any? = null): Any? {
 
             when (method) {
@@ -142,12 +153,14 @@ class Auth {
                 }
                 METHOD_CHANNEL_AUTH_GET_IS_PARTNER -> return isPartner
             }
-
-
             throw Exception("Not valid method channel message: $method")
         }
 
+        /**
+         * 02 - Clear data.
+         */
         private fun clearData(): Boolean {
+            clearToken()
             checkedLogged = false
             locallyLogged = false
             remotellyLogged = false
@@ -162,6 +175,9 @@ class Auth {
             return true
         }
 
+        /**
+         * 03 - Set token.
+         */
         private fun setToken(arguments: Any?): Boolean {
             debug(METHOD_CHANNEL_AUTH_SET_TOKEN)
             if (arguments == null || arguments !is String) {
@@ -174,9 +190,19 @@ class Auth {
             return true
         }
 
+        /**
+         * 04 - Get token.
+         */
         private fun getToken(): String? {
             return Commons.sharedPreferences!!.getString(TOKEN_KEY, null)
         }
 
+        /**
+         * 05 - Clear token.
+         */
+        private fun clearToken() {
+            // Clear token on Shared preferences
+            Commons.sharedPreferences!!.edit().remove(TOKEN_KEY).apply()
+        }
     }
 }
