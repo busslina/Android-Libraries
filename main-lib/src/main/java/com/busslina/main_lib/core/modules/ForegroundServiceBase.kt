@@ -227,15 +227,15 @@ abstract class ForegroundServiceBase: Service {
 
         debug("onTaskRemoved()")
 
-        val restartServiceIntent = Intent(applicationContext, Commons.foregroundServiceClass).also {
-            it.setPackage(packageName)
-        }
-
-        val restartServicePendingIntent: PendingIntent = PendingIntent.getService(this, 1, restartServiceIntent, PendingIntent.FLAG_ONE_SHOT)
-
-        val alarmService: AlarmManager = applicationContext.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-
-        alarmService.set(AlarmManager.ELAPSED_REALTIME, elapsedRealtime() + 1000, restartServicePendingIntent)
+//        val restartServiceIntent = Intent(applicationContext, Commons.foregroundServiceClass).also {
+//            it.setPackage(packageName)
+//        }
+//
+//        val restartServicePendingIntent: PendingIntent = PendingIntent.getService(this, 1, restartServiceIntent, PendingIntent.FLAG_ONE_SHOT)
+//
+//        val alarmService: AlarmManager = applicationContext.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+//
+//        alarmService.set(AlarmManager.ELAPSED_REALTIME, elapsedRealtime() + 1000, restartServicePendingIntent)
 
     }
 
