@@ -133,16 +133,12 @@ class Commons {
          * 03 - Send message method channel.
          */
         fun sendMessageMethodChannel(method: String, args: Any? = null) {
-
-            // TODO: MethodChannelQueue
-
-//            Handler(Looper.getMainLooper()).post {
-//                mainActivity!!.sendMessageMethodChannel(method, args)
-//            }
-//            mainActivity!!.sendMessageMethodChannel(method, args)
             (mainActivity as MainActivityI).sendMessageMethodChannel(method, args)
         }
 
+        /**
+         * 04 - Init base method channel.
+         */
         fun initBaseMethodChannel(method: String, arguments: Any? = null): Any? {
             when (method) {
 
@@ -166,11 +162,13 @@ class Commons {
                     }
                     val args = arguments.toString()
                     val jsonArgs = Gson().fromJson(args, JsonObject::class.java)
+                    val acquireLock = jsonArgs.get("acquireLock").asBoolean
+                    val authToken = jsonArgs.get("authToken").asString
                     val enableWebsocketSubModule = jsonArgs.get("enableWebsocketSubModule").asBoolean
                     val websocketUrl = jsonArgs.get("websocketUrl").asString
 
-                    // Modules preinit (only first time)
-                    ForegroundServiceBase.preInit(acquireLock = true)
+                    // Modules pre-init (only first time)
+                    ForegroundServiceBase.preInit(acquireLock = acquireLock, token = authToken)
                     WebSocketBase.preInit(enableWebsocketSubModule, websocketUrl)
 
                     return startForegroundService()
