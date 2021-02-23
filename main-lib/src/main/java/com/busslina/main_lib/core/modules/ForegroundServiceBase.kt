@@ -16,13 +16,14 @@ import com.busslina.main_lib.core.commons.Commons
 import com.busslina.main_lib.core.commons.Commons.Companion.debug
 import com.busslina.main_lib.core.commons.CommonsModules
 import com.busslina.main_lib.core.commons.PendingOperations
+import com.busslina.main_lib.core.modules.NotificationsBase.Companion.NOTIFICATION_ID
 import java.lang.Exception
 
 abstract class ForegroundServiceBase: Service {
 
     companion object {
 
-        const val NOTIFICATION_ID = 101
+
         const val STATE_STOPPED = 0
         const val STATE_STARTED = 1
 

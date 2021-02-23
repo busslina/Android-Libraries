@@ -229,9 +229,12 @@ abstract class WebSocketBase: ModuleBase {
     /**
      * Abstract functions
      *
-     * - 01 -
+     * - 01 - Message received
      */
 
+    /**
+     * 01 - Message received.
+     */
     abstract fun messageReceived(sender: String, msg: String)
 }
 
