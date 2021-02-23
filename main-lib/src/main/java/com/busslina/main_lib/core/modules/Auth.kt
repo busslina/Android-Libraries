@@ -152,7 +152,7 @@ class Auth {
             throw Exception("Not valid method channel message: $method")
         }
 
-        private fun clearData() {
+        private fun clearData(): Boolean {
             checkedLogged = false
             locallyLogged = false
             remotellyLogged = false
@@ -163,6 +163,8 @@ class Auth {
             isClient = null
             isRider = null
             isPartner = null
+
+            return true
         }
 
     }
