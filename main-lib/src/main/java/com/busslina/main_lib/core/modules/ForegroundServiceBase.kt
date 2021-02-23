@@ -56,6 +56,8 @@ abstract class ForegroundServiceBase: Service {
         fun clear() {
             token = null
             acquireLock = false
+
+            preInitied = false
         }
 
         fun sessionKilled() {
