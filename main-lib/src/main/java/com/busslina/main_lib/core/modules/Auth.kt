@@ -52,7 +52,7 @@ class Auth {
         var isPartner: Boolean? = null
 
 
-        fun initCustomMethodChannel(method: String, arguments: Any? = null): Any? {
+        fun initCustomMethodChannel(method: String, arguments: Any? = null): Any {
 
             when (method) {
                 METHOD_CHANNEL_AUTH_CLEAR_DATA -> return clearData()
@@ -64,7 +64,7 @@ class Auth {
                     token = arguments
                     return true
                 }
-                METHOD_CHANNEL_AUTH_GET_TOKEN -> return token
+                METHOD_CHANNEL_AUTH_GET_TOKEN -> return token!!
                 METHOD_CHANNEL_AUTH_SET_LOCALLY_LOGGED -> {
                     debug(METHOD_CHANNEL_AUTH_SET_LOCALLY_LOGGED)
                     if (arguments !is Boolean) {
@@ -100,7 +100,7 @@ class Auth {
                     userId = arguments
                     return true
                 }
-                METHOD_CHANNEL_AUTH_GET_USER_ID -> return userId
+                METHOD_CHANNEL_AUTH_GET_USER_ID -> return userId!!
                 METHOD_CHANNEL_AUTH_SET_IS_ROOT -> {
                     debug(METHOD_CHANNEL_AUTH_SET_IS_ROOT)
                     if (arguments !is Boolean) {
@@ -109,7 +109,7 @@ class Auth {
                     isRoot = arguments
                     return true
                 }
-                METHOD_CHANNEL_AUTH_GET_IS_ROOT -> return isRoot
+                METHOD_CHANNEL_AUTH_GET_IS_ROOT -> return isRoot!!
                 METHOD_CHANNEL_AUTH_SET_IS_ADMIN -> {
                     debug(METHOD_CHANNEL_AUTH_SET_IS_ADMIN)
                     if (arguments !is Boolean) {
@@ -118,7 +118,7 @@ class Auth {
                     isAdmin = arguments
                     return true
                 }
-                METHOD_CHANNEL_AUTH_GET_IS_ADMIN -> return isAdmin
+                METHOD_CHANNEL_AUTH_GET_IS_ADMIN -> return isAdmin!!
                 METHOD_CHANNEL_AUTH_SET_IS_CLIENT -> {
                     debug(METHOD_CHANNEL_AUTH_SET_IS_CLIENT)
                     if (arguments !is Boolean) {
@@ -127,7 +127,7 @@ class Auth {
                     isClient = arguments
                     return true
                 }
-                METHOD_CHANNEL_AUTH_GET_IS_CLIENT -> return isClient
+                METHOD_CHANNEL_AUTH_GET_IS_CLIENT -> return isClient!!
                 METHOD_CHANNEL_AUTH_SET_IS_RIDER -> {
                     debug(METHOD_CHANNEL_AUTH_SET_IS_RIDER)
                     if (arguments !is Boolean) {
@@ -136,7 +136,7 @@ class Auth {
                     isRider = arguments
                     return true
                 }
-                METHOD_CHANNEL_AUTH_GET_IS_RIDER -> return isRider
+                METHOD_CHANNEL_AUTH_GET_IS_RIDER -> return isRider!!
                 METHOD_CHANNEL_AUTH_SET_IS_PARTNER -> {
                     debug(METHOD_CHANNEL_AUTH_SET_IS_PARTNER)
                     if (arguments !is Boolean) {
@@ -145,7 +145,7 @@ class Auth {
                     isPartner = arguments
                     return true
                 }
-                METHOD_CHANNEL_AUTH_GET_IS_PARTNER -> return isPartner
+                METHOD_CHANNEL_AUTH_GET_IS_PARTNER -> return isPartner!!
             }
 
 
