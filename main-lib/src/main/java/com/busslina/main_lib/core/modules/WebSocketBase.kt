@@ -203,7 +203,8 @@ abstract class WebSocketBase: ModuleBase {
     /**
      * 04 - Emit.
      */
-    fun emit(event: String, data: String = "") {
+//    fun emit(event: String, data: String = "") {
+    fun emit(event: String, data: Any? = "") {
         if (!connected) {
             debug("Cannot emit because is disconnected")
             return
