@@ -178,7 +178,10 @@ abstract class WebSocketBase: ModuleBase {
                 connected = true
 
                 // Advice Flutter part
-                Commons.sendMessageMethodChannel(Commons.METHOD_CHANNEL_WEBSOCKET_SERVICE_CONNECTED, null)
+                Commons.sendMessageMethodChannel(Commons.METHOD_CHANNEL_WEBSOCKET_SERVICE_CONNECTED)
+
+                // Custom event handler
+                initCustomEventHandler(socket!!)
 
                 // TODO: stuff
             }
@@ -192,6 +195,12 @@ abstract class WebSocketBase: ModuleBase {
             }
         } else {
             connected = true
+
+            // Advice Flutter part
+            Commons.sendMessageMethodChannel(Commons.METHOD_CHANNEL_WEBSOCKET_SERVICE_CONNECTED)
+
+            // Custom event handler
+            initCustomEventHandler(socket!!)
         }
 
         // Managing close app (CLOSE APP AND/OR FOREGROUND SERVICE)
@@ -230,11 +239,17 @@ abstract class WebSocketBase: ModuleBase {
     /**
      * Abstract functions
      *
-     * - 01 - Message received
+     * - 01 - Init custom event handler
+     * - 02 - Message received
      */
 
     /**
-     * 01 - Message received.
+     * 01 - Init custom event handler.
+     */
+    abstract fun initCustomEventHandler(socket: Socket)
+
+    /**
+     * 02 - Message received.
      */
     abstract fun messageReceived(sender: String, msg: String)
 }
