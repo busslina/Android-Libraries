@@ -5,18 +5,23 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Build
 import android.view.WindowManager
+import com.busslina.main_lib.core.Semaphore
 import com.busslina.main_lib.core.interfaces.MainActivityI
 import com.busslina.main_lib.core.modules.Auth
 import com.busslina.main_lib.core.modules.ForegroundServiceBase
 import com.busslina.main_lib.core.modules.WebSocketBase
 import com.google.gson.Gson
 import com.google.gson.JsonObject
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class Commons {
 
     companion object {
 
         const val MODE_DEBUG = true
+
+        val methodChannelSemaphore = Semaphore()
 
         // Method channel
         //region
@@ -144,7 +149,12 @@ class Commons {
          * 03 - Send message method channel.
          */
         fun sendMessageMethodChannel(method: String, args: Any? = null) {
-            (mainActivity as MainActivityI).sendMessageMethodChannel(method, args)
+            GlobalScope.launch {
+                val ticket = methodChannelSemaphore.getTicketAndWait()
+                (mainActivity as MainActivityI).sendMessageMethodChannel(method, args)
+                ticket.release()
+            }
+//            (mainActivity as MainActivityI).sendMessageMethodChannel(method, args)
         }
 
         /**
