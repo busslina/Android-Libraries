@@ -8,6 +8,8 @@ import com.busslina.main_lib.core.commons.Commons.Companion.debug
 import com.busslina.main_lib.core.commons.CommonsModules
 import io.socket.client.IO
 import io.socket.client.Socket
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import org.json.JSONObject
 import java.lang.Exception
 
@@ -221,15 +223,17 @@ abstract class WebSocketBase: ModuleBase {
     /**
      * 04 - Emit.
      */
-    suspend fun emit(event: String, data: Any? = "") {
+    fun emit(event: String, data: Any? = "") {
         if (!connected) {
             debug("Cannot emit because is disconnected")
             return
         }
-        val ticket = semaphore.getTicketAndWait()
-        debug("Socket emitting: $event : $data")
-        socket!!.emit(event, data)
-        ticket.release()
+        GlobalScope.launch {
+            val ticket = semaphore.getTicketAndWait()
+            debug("Socket emitting: $event : $data")
+            socket!!.emit(event, data)
+            ticket.release()
+        }
     }
 
     /**
