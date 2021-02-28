@@ -40,7 +40,7 @@ abstract class WebSocketBase: ModuleBase {
 
     private var needToAuthenticate = true
 
-    private val semaphore = Semaphore()
+    val semaphore = Semaphore()
 
     /**
      * Constructor.
