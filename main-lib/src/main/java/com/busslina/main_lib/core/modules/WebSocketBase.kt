@@ -2,6 +2,7 @@ package com.busslina.main_lib.core.modules
 
 import android.content.Intent
 import com.busslina.main_lib.core.ModuleBase
+import com.busslina.main_lib.core.Semaphore
 import com.busslina.main_lib.core.commons.Commons
 import com.busslina.main_lib.core.commons.Commons.Companion.debug
 import com.busslina.main_lib.core.commons.CommonsModules
@@ -36,6 +37,8 @@ abstract class WebSocketBase: ModuleBase {
     private var websocketId = -1
 
     private var needToAuthenticate = true
+
+    private val semaphore = Semaphore()
 
     /**
      * Constructor.
@@ -218,14 +221,15 @@ abstract class WebSocketBase: ModuleBase {
     /**
      * 04 - Emit.
      */
-//    fun emit(event: String, data: String = "") {
-    fun emit(event: String, data: Any? = "") {
+    suspend fun emit(event: String, data: Any? = "") {
         if (!connected) {
             debug("Cannot emit because is disconnected")
             return
         }
+        val ticket = semaphore.getTicketAndWait()
         debug("Socket emitting: $event : $data")
         socket!!.emit(event, data)
+        ticket.release()
     }
 
     /**
@@ -264,19 +268,6 @@ abstract class WebSocketBase: ModuleBase {
      * 03 - Message received.
      */
     abstract fun messageReceived(sender: String, msg: String)
-
-    /**
-     * Getter functions
-     *
-     * - 01 - Get socket
-     */
-
-    /**
-     * 01 - Get socket.
-     */
-    fun getSocket(): Socket? {
-        return socket
-    }
 }
 
 private class Events {
