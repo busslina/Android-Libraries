@@ -183,6 +183,9 @@ abstract class WebSocketBase: ModuleBase {
                 // Custom event handler
                 initCustomEventHandler(socket!!)
 
+                // After socket conected
+                afterSocketConnected()
+
                 // TODO: stuff
             }
 
@@ -201,6 +204,9 @@ abstract class WebSocketBase: ModuleBase {
 
             // Custom event handler
             initCustomEventHandler(socket!!)
+
+            // After socket conected
+            afterSocketConnected()
         }
 
         // Managing close app (CLOSE APP AND/OR FOREGROUND SERVICE)
@@ -240,7 +246,8 @@ abstract class WebSocketBase: ModuleBase {
      * Abstract functions
      *
      * - 01 - Init custom event handler
-     * - 02 - Message received
+     * - 02 - After socket connected
+     * - 03 - Message received
      */
 
     /**
@@ -249,9 +256,27 @@ abstract class WebSocketBase: ModuleBase {
     abstract fun initCustomEventHandler(socket: Socket)
 
     /**
-     * 02 - Message received.
+     * 02 - After socket connected.
+     */
+    abstract fun afterSocketConnected()
+
+    /**
+     * 03 - Message received.
      */
     abstract fun messageReceived(sender: String, msg: String)
+
+    /**
+     * Getter functions
+     *
+     * - 01 - Get socket
+     */
+
+    /**
+     * 01 - Get socket.
+     */
+    fun getSocket(): Socket? {
+        return socket
+    }
 }
 
 private class Events {
