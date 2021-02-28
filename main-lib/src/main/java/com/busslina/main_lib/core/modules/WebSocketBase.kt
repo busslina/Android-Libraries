@@ -223,16 +223,21 @@ abstract class WebSocketBase: ModuleBase {
     /**
      * 04 - Emit.
      */
-    fun emit(event: String, data: Any? = "") {
+    fun emit(event: String, data: Any? = "", lockSemaphore: Boolean = true) {
         if (!connected) {
             debug("Cannot emit because is disconnected")
             return
         }
         GlobalScope.launch {
-            val ticket = semaphore.getTicketAndWait()
-            debug("Socket emitting: $event : $data")
-            socket!!.emit(event, data)
-            ticket.release()
+            if (lockSemaphore) {
+                val ticket = semaphore.getTicketAndWait()
+                debug("Socket emitting: $event : $data")
+                socket!!.emit(event, data)
+                ticket.release()
+            } else {
+                socket!!.emit(event, data)
+            }
+
         }
     }
 

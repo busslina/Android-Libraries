@@ -154,7 +154,6 @@ class Commons {
                 (mainActivity as MainActivityI).sendMessageMethodChannel(method, args)
                 ticket.release()
             }
-//            (mainActivity as MainActivityI).sendMessageMethodChannel(method, args)
         }
 
         /**
