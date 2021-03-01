@@ -186,10 +186,11 @@ class Commons {
                     val authToken = jsonArgs.get("authToken").asString
                     val enableWebsocketSubModule = jsonArgs.get("enableWebsocketSubModule").asBoolean
                     val websocketUrl = jsonArgs.get("websocketUrl").asString
+                    val authenticationRequired = jsonArgs.get("authenticationRequired").asBoolean
 
                     // Modules pre-init (only first time)
                     ForegroundServiceBase.preInit(acquireLock = acquireLock, token = authToken)
-                    WebSocketBase.preInit(enableWebsocketSubModule, websocketUrl)
+                    WebSocketBase.preInit(enableWebsocketSubModule, websocketUrl, authenticationRequired)
 
                     return startForegroundService()
                 }

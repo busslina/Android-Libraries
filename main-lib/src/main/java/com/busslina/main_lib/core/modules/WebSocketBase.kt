@@ -16,17 +16,19 @@ import java.lang.Exception
 abstract class WebSocketBase: ModuleBase {
 
     companion object {
+        var authenticationRequired = false
         var enableWebsocketSubModule = false
         lateinit var url: String
 
         private var preInitied = false
 
-        fun preInit(enableWebsocketSubModule: Boolean, url: String) {
+        fun preInit(enableWebsocketSubModule: Boolean, url: String, authenticationRequired: Boolean) {
             if (preInitied) {
                 return
             }
             this.enableWebsocketSubModule = enableWebsocketSubModule
             this.url = url
+            this.authenticationRequired = authenticationRequired
             preInitied = true
         }
     }
@@ -38,16 +40,13 @@ abstract class WebSocketBase: ModuleBase {
 
     private var websocketId = -1
 
-    private var needToAuthenticate = true
-
     val semaphore = Semaphore()
 
     /**
      * Constructor.
      */
-    constructor(needToAuthenticate: Boolean = true): super() {
+    constructor(): super() {
         CommonsModules.websocket = this
-        this.needToAuthenticate = needToAuthenticate
     }
 
     /**
@@ -170,7 +169,7 @@ abstract class WebSocketBase: ModuleBase {
 
         debug("Websocket onSocketConnected")
 
-        if (needToAuthenticate) {
+        if (authenticationRequired) {
             // 1. Sending token & device type
             val mapData: Map<String, Any> = mapOf("token" to ForegroundServiceBase.token!!, "deviceType" to Utils.getDeviceType())
             val data = JSONObject(mapData)
