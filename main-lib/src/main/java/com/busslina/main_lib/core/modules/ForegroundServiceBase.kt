@@ -19,7 +19,10 @@ import com.busslina.main_lib.core.commons.PendingOperations
 import com.busslina.main_lib.core.modules.NotificationsBase.Companion.NOTIFICATION_ID
 import java.lang.Exception
 
-abstract class ForegroundServiceBase: Service {
+abstract class ForegroundServiceBase
+/**
+ * Constructor.
+ */() : Service() {
 
     companion object {
 
@@ -84,9 +87,9 @@ abstract class ForegroundServiceBase: Service {
     var onStartCommandCount = 0
 
     /**
-     * Constructor.
+     * Constructor
      */
-    constructor(): super() {
+    init {
         CommonsModules.foregroundService = this
     }
 
@@ -122,6 +125,7 @@ abstract class ForegroundServiceBase: Service {
         }
         wakeLock = (getSystemService(Context.POWER_SERVICE) as PowerManager).run {
             newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "ForegroudService::lock").apply {
+                CommonsModules.websocket!!.emit("message", "[INFO]: Acquiring lock")
                 acquire()
                 lockAcquired = true
             }
@@ -136,6 +140,7 @@ abstract class ForegroundServiceBase: Service {
             return
         }
         if (wakeLock != null && wakeLock!!.isHeld) {
+            CommonsModules.websocket!!.emit("message", "[INFO]: Releasing lock")
             wakeLock!!.release()
         }
         lockAcquired = false
@@ -200,6 +205,8 @@ abstract class ForegroundServiceBase: Service {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         onStartCommandCount++
 
+        CommonsModules.websocket!!.emit("message", "[INFO]: Foreground Service -- onStartCommand() -- count: $onStartCommandCount")
+
 //        return START_STICKY
         return START_NOT_STICKY
     }
@@ -208,6 +215,8 @@ abstract class ForegroundServiceBase: Service {
      * 04 - On destroy.
      */
     override fun onDestroy() {
+
+        CommonsModules.websocket!!.emit("message", "[INFO]: Foreground Service -- onDestroy()")
 
         // Event handler
         EventsHandler.foregroundServiceClosed()
@@ -223,6 +232,9 @@ abstract class ForegroundServiceBase: Service {
      * 05 - On task removed.
      */
     override fun onTaskRemoved(rootIntent: Intent?) {
+
+        CommonsModules.websocket!!.emit("message", "[INFO]: Foreground Service -- onTaskRemoved()")
+
 //        super.onTaskRemoved(rootIntent)
 
         debug("onTaskRemoved()")

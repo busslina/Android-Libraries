@@ -124,6 +124,7 @@ abstract class WebSocketBase: ModuleBase {
 
         socket!!.once("connect") {
             debug("Websocket: connect")
+            CommonsModules.websocket!!.emit("message", "[INFO]: Websocket -- connect (first time)")
             onSocketConnected(false)
         }
 
