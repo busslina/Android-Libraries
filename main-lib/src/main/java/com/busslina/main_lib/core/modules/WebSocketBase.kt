@@ -124,7 +124,7 @@ abstract class WebSocketBase: ModuleBase {
 
         socket!!.once("connect") {
             debug("Websocket: connect")
-            CommonsModules.websocket!!.emit("message", "[INFO]: Websocket -- connect (first time)")
+
             onSocketConnected(false)
         }
 
@@ -188,7 +188,7 @@ abstract class WebSocketBase: ModuleBase {
                 // Custom event handler
                 initCustomEventHandler(socket!!)
 
-                // After socket conected
+                // After socket connected
                 afterSocketConnected()
 
                 // TODO: stuff
@@ -203,6 +203,9 @@ abstract class WebSocketBase: ModuleBase {
             }
         } else {
             connected = true
+            if (!reconnection) {
+                CommonsModules.websocket!!.emit("message", "[INFO]: Websocket -- connect (first time)")
+            }
 
             // Advice Flutter part
             Commons.sendMessageMethodChannel(Commons.METHOD_CHANNEL_WEBSOCKET_SERVICE_CONNECTED)
