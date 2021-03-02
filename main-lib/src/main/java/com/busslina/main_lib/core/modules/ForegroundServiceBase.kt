@@ -218,13 +218,16 @@ abstract class ForegroundServiceBase
      */
     override fun onDestroy() {
 
+        val semaphore = CommonsModules.websocket!!.semaphore
+
         CommonsModules.websocket!!.emit("message", "[INFO]: Foreground Service -- onDestroy()")
 
-        // Event handler
+        // Event handler (Websocket semaphore coroutine)
         EventsHandler.foregroundServiceClosed()
 
+        // (Websocket semaphore coroutine)
         GlobalScope.launch {
-            val ticket = CommonsModules.websocket!!.semaphore.getTicketAndWait()
+            val ticket = semaphore.getTicketAndWait()
             // Release lock
             releaseLock()
 
