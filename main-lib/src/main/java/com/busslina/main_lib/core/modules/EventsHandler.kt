@@ -1,7 +1,10 @@
 package com.busslina.main_lib.core.modules
 
+import com.busslina.main_lib.core.Semaphore
 import com.busslina.main_lib.core.commons.Commons
 import com.busslina.main_lib.core.commons.CommonsModules
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class EventsHandler {
 
@@ -27,15 +30,20 @@ class EventsHandler {
          * 02 - Foreground Service closed.
          */
         fun foregroundServiceClosed() {
-            // Websocket stop
-            if (WebSocketBase.enableWebsocketSubModule) {
-                CommonsModules.websocket!!.stop()
+            GlobalScope.launch {
+                val ticket = CommonsModules.websocket!!.semaphore.getTicketAndWait()
+                // Websocket stop
+                if (WebSocketBase.enableWebsocketSubModule) {
+                    CommonsModules.websocket!!.stop()
+                }
+
+                // Clear
+                ForegroundServiceBase.clear()
+                Commons.clear(deepClear = false)
+                CommonsModules.clear()
+                ticket.release()
             }
 
-            // Clear
-            ForegroundServiceBase.clear()
-            Commons.clear(deepClear = false)
-            CommonsModules.clear()
         }
     }
 }

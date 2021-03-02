@@ -17,6 +17,8 @@ import com.busslina.main_lib.core.commons.Commons.Companion.debug
 import com.busslina.main_lib.core.commons.CommonsModules
 import com.busslina.main_lib.core.commons.PendingOperations
 import com.busslina.main_lib.core.modules.NotificationsBase.Companion.NOTIFICATION_ID
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.lang.Exception
 
 abstract class ForegroundServiceBase
@@ -221,11 +223,15 @@ abstract class ForegroundServiceBase
         // Event handler
         EventsHandler.foregroundServiceClosed()
 
-        // Release lock
-        releaseLock()
+        GlobalScope.launch {
+            val ticket = CommonsModules.websocket!!.semaphore.getTicketAndWait()
+            // Release lock
+            releaseLock()
 
-        state = STATE_STOPPED
-        super.onDestroy()
+            state = STATE_STOPPED
+            super.onDestroy()
+            ticket.release()
+        }
     }
 
     /**
