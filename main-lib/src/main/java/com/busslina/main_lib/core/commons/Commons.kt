@@ -149,6 +149,10 @@ class Commons {
          * 03 - Send message method channel.
          */
         fun sendMessageMethodChannel(method: String, args: Any? = null) {
+            if (MainActivityState.isUnset()) {
+                debug("Cannot send message: $method with arguments: $args because activity is unset")
+                return
+            }
             GlobalScope.launch {
                 val ticket = methodChannelSemaphore.getTicketAndWait()
                 (mainActivity as MainActivityI).sendMessageMethodChannel(method, args)
@@ -366,6 +370,55 @@ class PendingOperations {
 
         fun setHighPriorityPendingOperationn(opCode: Int) {
             highPriorityPendingOperation = opCode
+        }
+    }
+}
+
+class MainActivityState() {
+
+    companion object {
+        const val STATE_UNSET = 1
+        const val STATE_STARTED = 2
+        const val STATE_PAUSED = 3
+
+        private var state = STATE_UNSET
+
+
+        /**
+         * Functions
+         *
+         * - 01 - Set state
+         * - 02 - Is unset
+         * - 03 - Is started
+         * - 04 - Is paused
+         */
+
+        /**
+         * 01 - Set state.
+         */
+        fun setState(state: Int) {
+            this.state = state
+        }
+
+        /**
+         * 02 - Is unset.
+         */
+        fun isUnset(): Boolean {
+            return state == STATE_UNSET
+        }
+
+        /**
+         * 03 - Is started.
+         */
+        fun isStarted(): Boolean {
+            return state == STATE_STARTED
+        }
+
+        /**
+         * 04 - Is paused.
+         */
+        fun isPaused(): Boolean {
+            return state == STATE_PAUSED
         }
     }
 }

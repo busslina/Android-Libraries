@@ -21,10 +21,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.lang.Exception
 
-abstract class ForegroundServiceBase
-/**
- * Constructor.
- */() : Service() {
+abstract class ForegroundServiceBase: Service() {
 
     companion object {
 
