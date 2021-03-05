@@ -13,7 +13,10 @@ import kotlinx.coroutines.launch
 import org.json.JSONObject
 import java.lang.Exception
 
-abstract class WebSocketBase: ModuleBase {
+abstract class WebSocketBase
+/**
+ * Constructor.
+ */() : ModuleBase() {
 
     companion object {
         var authenticationRequired = false
@@ -45,7 +48,7 @@ abstract class WebSocketBase: ModuleBase {
     /**
      * Constructor.
      */
-    constructor(): super() {
+    init {
         CommonsModules.websocket = this
     }
 

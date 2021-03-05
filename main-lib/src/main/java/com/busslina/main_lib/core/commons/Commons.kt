@@ -20,6 +20,12 @@ class Commons {
     companion object {
 
         const val MODE_DEBUG = true
+        const val MODE_DEBUG_ALL = 1
+        const val MODE_DEBUG_INFO = 2
+
+        const val MODE_DEBUG_USED = MODE_DEBUG_ALL
+
+
 
         val methodChannelSemaphore = Semaphore()
 
@@ -96,9 +102,10 @@ class Commons {
          * - 05 - Start foreground service
          * - 06 - Stop foreground service
          * - 07 - Debug
-         * - 08 - Check preinitied
-         * - 09 - Enable screen lock
-         * - 10 - Disable screen lock
+         * - 08 - Get debug prefix
+         * - 09 - Check preinitied
+         * - 10 - Enable screen lock
+         * - 11 - Disable screen lock
          */
 
         /**
@@ -271,15 +278,30 @@ class Commons {
         /**
          * 07 - Debug.
          */
-        fun debug(msg: String) {
+        fun debug(msg: String, debugLevel: Int = MODE_DEBUG_INFO) {
             if (!MODE_DEBUG) {
                 return
             }
-            println("DEBUG: $msg")
+            if (MODE_DEBUG_USED > debugLevel) {
+                return
+            }
+            val prefix = getDebugPrefix(debugLevel)
+            println("$prefix: $msg")
         }
 
         /**
-         * 08 - Check preinitied.
+         * 08 - Get debug prefix
+         */
+        private fun getDebugPrefix(debugLevel: Int): String {
+            when (debugLevel) {
+                MODE_DEBUG_ALL -> return "DEBUG ALL"
+                MODE_DEBUG_INFO -> return "DEBUG INFO"
+            }
+            throw Exception("Invalid debug level")
+        }
+
+        /**
+         * 09 - Check preinitied.
          */
         fun checkPreinitied() {
             if (!preInitied || !ForegroundServiceBase.preInitied) {
@@ -288,7 +310,7 @@ class Commons {
         }
 
         /**
-         * 09 - Enable screen lock.
+         * 10 - Enable screen lock.
          */
         fun enableScreenLock() {
             (mainActivity as Activity).window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
@@ -296,7 +318,7 @@ class Commons {
         }
 
         /**
-         * 10 - Disable screen lock.
+         * 11 - Disable screen lock.
          */
         fun disableScreenLock() {
             (mainActivity as Activity).window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
@@ -321,6 +343,7 @@ class Commons {
          * 02 - Permissions granted.
          */
         fun permissionsGranted(granted: Boolean) {
+            debug("permissionsGranted(): $granted", MODE_DEBUG_ALL)
             permissionsGranted = granted
             permissionsResolved = true
             advicePermissionsResolution()
@@ -333,6 +356,7 @@ class Commons {
             if (!permissionsResolved) {
                 throw java.lang.Exception("Permissions not resolved yet")
             }
+            debug("advicePermissionsResolution()", MODE_DEBUG_ALL)
             if (permissionsGranted) {
                 return advicePermissionsGranted()
             }
@@ -343,7 +367,7 @@ class Commons {
          * 04 - After permissions granted.
          */
         private fun advicePermissionsGranted() {
-            debug("Sending permissions granted")
+            debug("advicePermissionsGranted()", MODE_DEBUG_ALL)
             sendMessageMethodChannel(METHOD_CHANNEL_PERMISSIONS_GRANTED)
         }
 
@@ -351,7 +375,7 @@ class Commons {
          * 05 - After permissions not granted.
          */
         private fun advicePermissionsNotGranted() {
-            debug("Sending permissions not granted")
+            debug("advicePermissionsNotGranted()", MODE_DEBUG_ALL)
             sendMessageMethodChannel(METHOD_CHANNEL_PERMISSIONS_NOT_GRANTED)
         }
     }
@@ -374,7 +398,7 @@ class PendingOperations {
     }
 }
 
-class MainActivityState() {
+class MainActivityState {
 
     companion object {
         const val STATE_UNSET = 1
