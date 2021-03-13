@@ -209,6 +209,7 @@ abstract class ForegroundServiceBase: Service() {
             Log.i("ForegroundServiceBase", "onStartCommand() --> intent = null")
         } else {
             Log.i("ForegroundServiceBase", "onStartCommand() --> intent = $intent")
+            Log.i("ForegroundServiceBase", "onStartCommand() --> action = ${intent.action}")
         }
         onStartCommandCount++
 
