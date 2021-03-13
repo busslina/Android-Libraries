@@ -211,6 +211,8 @@ abstract class ForegroundServiceBase: Service() {
             Log.i("ForegroundServiceBase", "onStartCommand() --> intent = $intent")
             Log.i("ForegroundServiceBase", "onStartCommand() --> action = ${intent.action}")
         }
+
+        isStarted()
 //        onStartCommandCount++
 
 //        CommonsModules.websocket!!.emit("message", "[INFO]: Foreground Service -- onStartCommand() -- count: $onStartCommandCount")
@@ -249,12 +251,12 @@ abstract class ForegroundServiceBase: Service() {
      */
     override fun onTaskRemoved(rootIntent: Intent?) {
         Log.i("ForegroundServiceBase", "onTaskRemoved()")
+        super.onTaskRemoved(rootIntent)
 
-        CommonsModules.websocket!!.emit("message", "[INFO]: Foreground Service -- onTaskRemoved()")
+//        CommonsModules.websocket!!.emit("message", "[INFO]: Foreground Service -- onTaskRemoved()")
 
-//        super.onTaskRemoved(rootIntent)
 
-        debug("onTaskRemoved()")
+//        debug("onTaskRemoved()")
 
 //        val restartServiceIntent = Intent(applicationContext, Commons.foregroundServiceClass).also {
 //            it.setPackage(packageName)
