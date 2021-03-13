@@ -1,6 +1,7 @@
 package com.busslina.main_lib.core.modules
 
 import android.content.Intent
+import android.util.Log
 import com.busslina.main_lib.core.ModuleBase
 import com.busslina.main_lib.core.Semaphore
 import com.busslina.main_lib.core.commons.Commons
@@ -49,6 +50,7 @@ abstract class WebSocketBase
      * Constructor.
      */
     init {
+        Log.v("WebSocketBase", "constructor()")
         CommonsModules.websocket = this
     }
 
@@ -64,6 +66,7 @@ abstract class WebSocketBase
      * 01 - Start.
      */
     override fun start() {
+        Log.v("WebSocketBase", "start()")
         if (isStarted()) {
             return
         }
@@ -78,6 +81,7 @@ abstract class WebSocketBase
      * 02 - Stop.
      */
     override fun stop() {
+        Log.v("WebSocketBase", "stop()")
         if (isStopped()) {
             return
         }
@@ -92,6 +96,7 @@ abstract class WebSocketBase
      * 03 - Clear.
      */
     override fun clear() {
+        Log.v("WebSocketBase", "clear()")
         connected = false
         ruptureDisconnected = false
         socket = null
@@ -112,6 +117,7 @@ abstract class WebSocketBase
      * 01 - Connect.
      */
     private fun connect() {
+        Log.v("WebSocketBase", "connect()")
         if (!preInitied) {
             throw Exception("WebSocket not preinitied")
         }
@@ -119,19 +125,29 @@ abstract class WebSocketBase
 
         val options = IO.Options.builder()
                 .setForceNew(false)
-                .setReconnection(true)
+//                .setReconnection(true)
+                .setReconnection(false)
                 .build()
 
         socket = IO.socket(url, options)
 
-
+        // Connect event
         socket!!.once("connect") {
+            Log.v("WebSocketBase", "connect event")
             debug("Websocket: connect")
 
             onSocketConnected(false)
         }
 
+        // Error event
+        socket!!.once("error") {
+            Log.v("WebSocketBase", "error event")
+            debug("Websocket: error")
+        }
+
+        // Disconnect event
         socket!!.on("disconnect") {
+            Log.v("WebSocketBase", "disconnect event)")
             debug("Websocket: disconnect")
             connected = false
             ruptureDisconnected = true
@@ -139,7 +155,9 @@ abstract class WebSocketBase
             // TODO: stuff
         }
 
+        // Reconnect event
         socket!!.io().on("reconnect") {
+            Log.v("WebSocketBase", "reconnect event")
             debug("Websocket: reconnect")
             ruptureDisconnected = false
             onSocketConnected(true)
@@ -162,6 +180,7 @@ abstract class WebSocketBase
      * 02 - Disconnect.
      */
     private fun disconnect() {
+        Log.v("WebSocketBase", "disconnect()")
         socket!!.off()
         socket!!.disconnect()
     }
@@ -170,7 +189,7 @@ abstract class WebSocketBase
      * 03 - On socket connected.
      */
     private fun onSocketConnected(reconnection: Boolean) {
-
+        Log.v("WebSocketBase", "onSocketConnected()")
         debug("Websocket onSocketConnected")
 
         if (authenticationRequired) {
@@ -230,6 +249,7 @@ abstract class WebSocketBase
      * 04 - Emit.
      */
     fun emit(event: String, data: Any? = "", lockSemaphore: Boolean = true) {
+        Log.v("WebSocketBase", "emit()")
         if (!connected) {
             debug("Cannot emit because is disconnected")
             return
