@@ -205,12 +205,12 @@ abstract class ForegroundServiceBase: Service() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         Log.i("ForegroundServiceBase", "onStartCommand()")
 
-//        if (intent == null) {
-//            Log.i("ForegroundServiceBase", "onStartCommand() --> intent = null")
-//        } else {
-//            Log.i("ForegroundServiceBase", "onStartCommand() --> intent = $intent")
-//            Log.i("ForegroundServiceBase", "onStartCommand() --> action = ${intent.action}")
-//        }
+        if (intent == null) {
+            Log.i("ForegroundServiceBase", "onStartCommand() --> intent = null")
+        } else {
+            Log.i("ForegroundServiceBase", "onStartCommand() --> intent = $intent")
+            Log.i("ForegroundServiceBase", "onStartCommand() --> action = ${intent.action}")
+        }
 //        onStartCommandCount++
 
 //        CommonsModules.websocket!!.emit("message", "[INFO]: Foreground Service -- onStartCommand() -- count: $onStartCommandCount")
