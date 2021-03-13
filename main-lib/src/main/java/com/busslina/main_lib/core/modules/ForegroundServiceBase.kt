@@ -213,7 +213,7 @@ abstract class ForegroundServiceBase: Service() {
         }
 //        onStartCommandCount++
 
-        CommonsModules.websocket!!.emit("message", "[INFO]: Foreground Service -- onStartCommand() -- count: $onStartCommandCount")
+//        CommonsModules.websocket!!.emit("message", "[INFO]: Foreground Service -- onStartCommand() -- count: $onStartCommandCount")
 
         return START_STICKY
 //        return START_NOT_STICKY
