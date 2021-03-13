@@ -125,8 +125,8 @@ abstract class WebSocketBase
 
         val options = IO.Options.builder()
                 .setForceNew(false)
-//                .setReconnection(true)
-                .setReconnection(false)
+                .setReconnection(true)
+//                .setReconnection(false)
                 .build()
 
         socket = IO.socket(url, options)
