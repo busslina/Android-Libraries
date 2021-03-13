@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Build
+import android.util.Log
 import android.view.WindowManager
 import com.busslina.main_lib.core.Semaphore
 import com.busslina.main_lib.core.interfaces.MainActivityI
@@ -286,7 +287,8 @@ class Commons {
                 return
             }
             val prefix = getDebugPrefix(debugLevel)
-            println("$prefix: $msg")
+            val message = "$prefix: $msg"
+            println(message)
         }
 
         /**
