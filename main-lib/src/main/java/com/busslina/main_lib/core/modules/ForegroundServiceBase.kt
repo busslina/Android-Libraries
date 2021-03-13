@@ -211,8 +211,8 @@ abstract class ForegroundServiceBase: Service() {
             Log.i("ForegroundServiceBase", "onStartCommand() --> intent = $intent")
             Log.i("ForegroundServiceBase", "onStartCommand() --> action = ${intent.action}")
         }
+        Log.i("ForegroundServiceBase", "onStartCommand() --> isStarted: ${isStarted()}")
 
-        isStarted()
 //        onStartCommandCount++
 
 //        CommonsModules.websocket!!.emit("message", "[INFO]: Foreground Service -- onStartCommand() -- count: $onStartCommandCount")
