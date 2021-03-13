@@ -251,7 +251,7 @@ abstract class WebSocketBase
     fun emit(event: String, data: Any? = "", lockSemaphore: Boolean = true) {
         Log.v("WebSocketBase", "emit()")
         if (!connected) {
-            debug("Cannot emit because is disconnected")
+//            debug("Cannot emit because is disconnected")
             return
         }
         GlobalScope.launch {
