@@ -50,7 +50,7 @@ abstract class WebSocketBase
      * Constructor.
      */
     init {
-        Log.v("WebSocketBase", "constructor()")
+        Log.i("WebSocketBase", "constructor()")
         CommonsModules.websocket = this
     }
 
@@ -66,7 +66,7 @@ abstract class WebSocketBase
      * 01 - Start.
      */
     override fun start() {
-        Log.v("WebSocketBase", "start()")
+        Log.i("WebSocketBase", "start()")
         if (isStarted()) {
             return
         }
@@ -81,7 +81,7 @@ abstract class WebSocketBase
      * 02 - Stop.
      */
     override fun stop() {
-        Log.v("WebSocketBase", "stop()")
+        Log.i("WebSocketBase", "stop()")
         if (isStopped()) {
             return
         }
@@ -96,7 +96,7 @@ abstract class WebSocketBase
      * 03 - Clear.
      */
     override fun clear() {
-        Log.v("WebSocketBase", "clear()")
+        Log.i("WebSocketBase", "clear()")
         connected = false
         ruptureDisconnected = false
         socket = null
@@ -117,11 +117,11 @@ abstract class WebSocketBase
      * 01 - Connect.
      */
     private fun connect() {
-        Log.v("WebSocketBase", "connect()")
+        Log.i("WebSocketBase", "connect()")
         if (!preInitied) {
             throw Exception("WebSocket not preinitied")
         }
-        debug("Websocket connect")
+//        debug("Websocket connect")
 
         val options = IO.Options.builder()
                 .setForceNew(false)
@@ -133,22 +133,22 @@ abstract class WebSocketBase
 
         // Connect event
         socket!!.once("connect") {
-            Log.v("WebSocketBase", "connect event")
-            debug("Websocket: connect")
+            Log.i("WebSocketBase", "connect event")
+//            debug("Websocket: connect")
 
             onSocketConnected(false)
         }
 
         // Error event
         socket!!.once("error") {
-            Log.v("WebSocketBase", "error event")
-            debug("Websocket: error")
+            Log.i("WebSocketBase", "error event")
+//            debug("Websocket: error")
         }
 
         // Disconnect event
         socket!!.on("disconnect") {
-            Log.v("WebSocketBase", "disconnect event)")
-            debug("Websocket: disconnect")
+            Log.i("WebSocketBase", "disconnect event)")
+//            debug("Websocket: disconnect")
             connected = false
             ruptureDisconnected = true
 
@@ -157,15 +157,15 @@ abstract class WebSocketBase
 
         // Reconnect event
         socket!!.io().on("reconnect") {
-            Log.v("WebSocketBase", "reconnect event")
-            debug("Websocket: reconnect")
+            Log.i("WebSocketBase", "reconnect event")
+//            debug("Websocket: reconnect")
             ruptureDisconnected = false
             onSocketConnected(true)
         }
 
         // Testing fake notification
         socket!!.on("fake-notification") {
-            debug("Websocket: fake-notification")
+//            debug("Websocket: fake-notification")
 //            val ctx = CommonsModules.foregroundService!!
 //            val intent = Intent(ctx, Commons.mainActivityClass)
 //            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
@@ -180,7 +180,7 @@ abstract class WebSocketBase
      * 02 - Disconnect.
      */
     private fun disconnect() {
-        Log.v("WebSocketBase", "disconnect()")
+        Log.i("WebSocketBase", "disconnect()")
         socket!!.off()
         socket!!.disconnect()
     }
@@ -189,8 +189,8 @@ abstract class WebSocketBase
      * 03 - On socket connected.
      */
     private fun onSocketConnected(reconnection: Boolean) {
-        Log.v("WebSocketBase", "onSocketConnected()")
-        debug("Websocket onSocketConnected")
+        Log.i("WebSocketBase", "onSocketConnected()")
+//        debug("Websocket onSocketConnected")
 
         if (authenticationRequired) {
             // 1. Sending token & device type
@@ -257,7 +257,6 @@ abstract class WebSocketBase
         GlobalScope.launch {
             if (lockSemaphore) {
                 val ticket = semaphore.getTicketAndWait()
-                debug("Socket emitting: $event : $data")
                 socket!!.emit(event, data)
                 ticket.release()
             } else {
