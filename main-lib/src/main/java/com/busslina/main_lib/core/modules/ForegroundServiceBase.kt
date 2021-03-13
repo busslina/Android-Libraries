@@ -1,22 +1,15 @@
 package com.busslina.main_lib.core.modules
 
-import android.app.AlarmManager
 import android.app.Notification
-import android.app.PendingIntent
 import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.IBinder
 import android.os.PowerManager
-import android.os.SystemClock
-import android.os.SystemClock.elapsedRealtime
 import android.util.Log
-import androidx.core.app.NotificationCompat
-import com.busslina.main_lib.core.commons.Commons
 import com.busslina.main_lib.core.commons.Commons.Companion.debug
 import com.busslina.main_lib.core.commons.CommonsModules
-import com.busslina.main_lib.core.commons.PendingOperations
 import com.busslina.main_lib.core.modules.NotificationsBase.Companion.NOTIFICATION_ID
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -211,6 +204,12 @@ abstract class ForegroundServiceBase: Service() {
      */
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         Log.i("ForegroundServiceBase", "onStartCommand()")
+
+        if (intent == null) {
+            Log.i("ForegroundServiceBase", "onStartCommand() --> intent = null")
+        } else {
+            Log.i("ForegroundServiceBase", "onStartCommand() --> intent = $intent")
+        }
         onStartCommandCount++
 
         CommonsModules.websocket!!.emit("message", "[INFO]: Foreground Service -- onStartCommand() -- count: $onStartCommandCount")
