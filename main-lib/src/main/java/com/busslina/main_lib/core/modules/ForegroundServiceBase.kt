@@ -159,9 +159,15 @@ abstract class ForegroundServiceBase: Service() {
     /**
      * 06 - Initialize service.
      */
-    open fun initializeService() {
+    open fun initializeService(recoveryMode: Boolean) {
         state = STATE_STARTED
-        super.onCreate()
+
+        // TESTING
+        if (recoveryMode) {
+            // Print variables state
+            DebugM.send("ForegroundServiceBase", "WebSocket module is null? :${CommonsModules.websocket != null}")
+            DebugM.send("ForegroundServiceBase", "WebSocket module is started? :${CommonsModules.websocket != null && CommonsModules.websocket!!.isStarted()}")
+        }
 
         // To foreground with notification
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -200,8 +206,9 @@ abstract class ForegroundServiceBase: Service() {
      * 01 - On create.
      */
     override fun onCreate() {
+        super.onCreate()
         DebugM.send("ForegroundServiceBase", "onCreate()")
-        initializeService()
+        initializeService(false)
     }
 
     /**
@@ -221,7 +228,7 @@ abstract class ForegroundServiceBase: Service() {
         if (intent == null) {
             // Restarting service after being deleted by system
             DebugM.send("ForegroundServiceBase", "onStartCommand() --> intent = null")
-            initializeService()
+            initializeService(true)
         } else {
             DebugM.send("ForegroundServiceBase", "onStartCommand() --> intent = $intent")
             DebugM.send("ForegroundServiceBase", "onStartCommand() --> action = ${intent.action}")

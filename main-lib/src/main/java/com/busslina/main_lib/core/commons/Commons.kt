@@ -441,13 +441,12 @@ class DebugM {
          * Tries to send via WebSocket and remove from list every stored message.
          */
         fun resolveStoredMessages() {
-            send("Commons", "resolveStoredMessages(): list size --> ${list.size}")
+            send("Commons", "resolveStoredMessages()")
             val clone = mutableListOf<Message>()
             list.forEach {
                 clone.add(it)
             }
 
-            send("Commons", "resolveStoredMessages(): clone list size --> ${clone.size}")
             clone.forEach {
                 if (it.sendOverWebsocket()) {
                     list.remove(it)

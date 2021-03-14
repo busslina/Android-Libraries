@@ -297,7 +297,7 @@ abstract class WebSocketBase: ModuleBase() {
      * 07 - Check Debug Manager pending messages.
      */
     fun checkDebugManagerPendingMessages() {
-        DebugM.send("WebSocketBase", "checkDebugManagerPendingMessages(")
+        DebugM.send("WebSocketBase", "checkDebugManagerPendingMessages()")
         DebugM.resolveStoredMessages()
     }
     /**
