@@ -95,6 +95,8 @@ abstract class ForegroundServiceBase: Service() {
      * - 02 - Is started
      * - 03 - Acquire lock
      * - 04 - Release lock
+     * - 05 - Check websocket submodule
+     * - 06 - Initialize service
      */
 
     /**
@@ -145,6 +147,9 @@ abstract class ForegroundServiceBase: Service() {
         lockAcquired = false
     }
 
+    /**
+     * 05 - Check websocket submodule.
+     */
     fun checkWebsocketSubModule() {
         if (CommonsModules.websocket == null) {
             throw Exception("WebSocket module not created")
@@ -152,20 +157,9 @@ abstract class ForegroundServiceBase: Service() {
     }
 
     /**
-     * Inherited functions
-     *
-     * - 01 - On create
-     * - 02 - On bind
-     * - 03 - On start command
-     * - 04 - On destroy
-     * - 05 - On task removed
+     * 06 - Initialize service.
      */
-
-    /**
-     * 01 - On create.
-     */
-    override fun onCreate() {
-        DebugM.send("ForegroundServiceBase", "onCreate()")
+    fun initializeService() {
         state = STATE_STARTED
         super.onCreate()
 
@@ -193,6 +187,24 @@ abstract class ForegroundServiceBase: Service() {
     }
 
     /**
+     * Inherited functions
+     *
+     * - 01 - On create
+     * - 02 - On bind
+     * - 03 - On start command
+     * - 04 - On destroy
+     * - 05 - On task removed
+     */
+
+    /**
+     * 01 - On create.
+     */
+    override fun onCreate() {
+        DebugM.send("ForegroundServiceBase", "onCreate()")
+        initializeService()
+    }
+
+    /**
      * 02 - On bind.
      */
     override fun onBind(p0: Intent?): IBinder? {
@@ -207,16 +219,14 @@ abstract class ForegroundServiceBase: Service() {
         DebugM.send("ForegroundServiceBase", "onStartCommand()")
 
         if (intent == null) {
+            // Restarting service after being deleted by system
             DebugM.send("ForegroundServiceBase", "onStartCommand() --> intent = null")
+            initializeService()
         } else {
             DebugM.send("ForegroundServiceBase", "onStartCommand() --> intent = $intent")
             DebugM.send("ForegroundServiceBase", "onStartCommand() --> action = ${intent.action}")
         }
         DebugM.send("ForegroundServiceBase", "onStartCommand() --> isStarted: ${isStarted()}")
-
-//        onStartCommandCount++
-
-//        CommonsModules.websocket!!.emit("message", "[INFO]: Foreground Service -- onStartCommand() -- count: $onStartCommandCount")
 
         return START_STICKY
 //        return START_NOT_STICKY

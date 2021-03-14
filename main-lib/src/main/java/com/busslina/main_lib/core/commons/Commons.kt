@@ -447,6 +447,7 @@ class DebugM {
                 clone.add(it)
             }
 
+            send("Commons", "resolveStoredMessages(): clone list size --> ${clone.size}")
             clone.forEach {
                 if (it.sendOverWebsocket()) {
                     list.remove(it)
