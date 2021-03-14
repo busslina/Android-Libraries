@@ -128,8 +128,8 @@ abstract class WebSocketBase: ModuleBase() {
 
         val options = IO.Options.builder()
                 .setForceNew(false)
-                .setReconnection(true)
-//                .setReconnection(false)
+//                .setReconnection(true)
+                .setReconnection(false)
                 .build()
 
         socket = IO.socket(url, options)
@@ -142,9 +142,15 @@ abstract class WebSocketBase: ModuleBase() {
         }
 
         // Error event
+        // TESTING
         socket!!.once("error") {
             DebugM.send("WebSocketBase", "error event")
-//            debug("Websocket: error")
+        }
+
+        // Connect error event
+        // TESTING
+        socket!!.once("connect_error") {
+            DebugM.send("WebSocketBase", "connect error event")
         }
 
         // Disconnect event

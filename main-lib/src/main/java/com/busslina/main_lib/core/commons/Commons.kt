@@ -396,14 +396,21 @@ class DebugM {
         private val date = Date()
 
         private fun getWsText(): String {
-            return "[DebugM] - [${Utils.getHourFormatted(date)}] --> ${if (prefix != null) "$prefix: " else ""} $message"
+            return "[DebugM] - [${Utils.getHourFormatted(date)}] --> ${getPrefix()} $message"
+        }
+
+        private fun getPrefix(): String {
+            if (prefix == null) {
+                return ""
+            }
+            return prefix
         }
 
         /**
          * Prints message via Log
          */
         fun logInfo() {
-            Log.i(prefix, message)
+            Log.i("$NAMESPACE - ${getPrefix()}", message)
         }
 
         /**
@@ -415,6 +422,8 @@ class DebugM {
     }
 
     companion object {
+
+        private const val NAMESPACE = "busslina"
 
         private var list = mutableListOf<Message>()
 
