@@ -159,7 +159,7 @@ abstract class ForegroundServiceBase: Service() {
     /**
      * 06 - Initialize service.
      */
-    fun initializeService() {
+    open fun initializeService() {
         state = STATE_STARTED
         super.onCreate()
 
