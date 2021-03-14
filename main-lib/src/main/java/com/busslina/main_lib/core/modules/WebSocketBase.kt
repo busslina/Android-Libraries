@@ -155,13 +155,14 @@ abstract class WebSocketBase: ModuleBase() {
         }
 
         // Disconnect event
-//        socket!!.once("disconnect") {
-//            DebugM.send("WebSocketBase", "disconnect event)")
-//            connected = false
-//            ruptureDisconnected = true
-//
-//            // TODO: stuff
-//        }
+        socket!!.once("disconnect") {
+            DebugM.send("WebSocketBase", "disconnect event)")
+            ruptureDisconnected = true
+            disconnect()
+            connect()
+
+            // TODO: stuff
+        }
 
         // Reconnect event
 //        socket!!.io().on("reconnect") {
