@@ -140,21 +140,28 @@ abstract class WebSocketBase: ModuleBase() {
         }
 
         // Connect error event
-        // TESTING
+        // Fired:
+        // A - when connect attemp timeout
+        // B - when disconnect
         socket!!.once("connect_error") {
             DebugM.send("WebSocketBase", "connect error event")
+            if (connected) {
+                DebugM.send("WebSocketBase", "socket disconnected")
+            } else {
+                DebugM.send("WebSocketBase", "socket connect timeout")
+            }
             disconnect()
             connect()
         }
 
         // Disconnect event
-        socket!!.once("disconnect") {
-            DebugM.send("WebSocketBase", "disconnect event)")
-            connected = false
-            ruptureDisconnected = true
-
-            // TODO: stuff
-        }
+//        socket!!.once("disconnect") {
+//            DebugM.send("WebSocketBase", "disconnect event)")
+//            connected = false
+//            ruptureDisconnected = true
+//
+//            // TODO: stuff
+//        }
 
         // Reconnect event
 //        socket!!.io().on("reconnect") {
@@ -181,6 +188,7 @@ abstract class WebSocketBase: ModuleBase() {
      */
     private fun disconnect() {
         DebugM.send("WebSocketBase", "disconnect()")
+        connected = false
         socket!!.off()
         socket!!.disconnect()
     }

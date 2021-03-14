@@ -214,11 +214,6 @@ class Commons {
                 // Stop Foreground Service
                 METHOD_CHANNEL_STOP_FOREGROUND_SERVICE -> {
                     debug("Trying to stop foreground service")
-                    if (ForegroundServiceBase.isStopped()) {
-                        debug("Already stopped")
-                        return false
-                    }
-                    debug("Stopping foreground service")
                     val status = stopForegroundService()
                     return status
                 }
@@ -446,7 +441,7 @@ class DebugM {
          * Tries to send via WebSocket and remove from list every stored message.
          */
         fun resolveStoredMessages() {
-            DebugM.send("Commons", "resolveStoredMessages()")
+            send("Commons", "resolveStoredMessages(): list size --> ${list.size}")
             val clone = mutableListOf<Message>()
             list.forEach {
                 clone.add(it)
