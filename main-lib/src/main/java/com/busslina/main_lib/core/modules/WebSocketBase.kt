@@ -124,11 +124,10 @@ abstract class WebSocketBase: ModuleBase() {
         if (!preInitied) {
             throw Exception("WebSocket not preinitied")
         }
-//        debug("Websocket connect")
 
         val options = IO.Options.builder()
-                .setForceNew(false)
-//                .setReconnection(true)
+//                .setForceNew(false)
+                .setForceNew(true)
                 .setReconnection(false)
                 .build()
 
@@ -137,26 +136,20 @@ abstract class WebSocketBase: ModuleBase() {
         // Connect event
         socket!!.once("connect") {
             DebugM.send("WebSocketBase", "connect event")
-
-            onSocketConnected(false)
-        }
-
-        // Error event
-        // TESTING
-        socket!!.once("error") {
-            DebugM.send("WebSocketBase", "error event")
+            onSocketConnected()
         }
 
         // Connect error event
         // TESTING
         socket!!.once("connect_error") {
             DebugM.send("WebSocketBase", "connect error event")
+            disconnect()
+            connect()
         }
 
         // Disconnect event
-        socket!!.on("disconnect") {
+        socket!!.once("disconnect") {
             DebugM.send("WebSocketBase", "disconnect event)")
-//            debug("Websocket: disconnect")
             connected = false
             ruptureDisconnected = true
 
@@ -164,12 +157,11 @@ abstract class WebSocketBase: ModuleBase() {
         }
 
         // Reconnect event
-        socket!!.io().on("reconnect") {
-            DebugM.send("WebSocketBase", "reconnect event")
-//            debug("Websocket: reconnect")
-            ruptureDisconnected = false
-            onSocketConnected(true)
-        }
+//        socket!!.io().on("reconnect") {
+//            DebugM.send("WebSocketBase", "reconnect event")
+//            ruptureDisconnected = false
+//            onSocketConnected(true)
+//        }
 
         // Testing fake notification
         socket!!.on("fake-notification") {
@@ -196,9 +188,8 @@ abstract class WebSocketBase: ModuleBase() {
     /**
      * 03 - On socket connected.
      */
-    private fun onSocketConnected(reconnection: Boolean) {
+    private fun onSocketConnected() {
         DebugM.send("WebSocketBase", "onSocketConnected()")
-//        debug("Websocket onSocketConnected")
 
         if (authenticationRequired) {
             // Authentication required
@@ -238,10 +229,6 @@ abstract class WebSocketBase: ModuleBase() {
         } else {
             // Authentication not required
             connected = true
-            if (!reconnection) {
-//                CommonsModules.websocket!!.emit("message", "[INFO]: Websocket -- connect (first time)")
-                DebugM.send(message = "[INFO]: Websocket -- connect (first time)")
-            }
 
             // Advice Flutter part
             Commons.sendMessageMethodChannel(Commons.METHOD_CHANNEL_WEBSOCKET_SERVICE_CONNECTED)

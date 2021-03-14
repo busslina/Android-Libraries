@@ -428,15 +428,6 @@ class DebugM {
         private var list = mutableListOf<Message>()
 
         /**
-         * Return list and clear it
-         */
-        fun getStoredMessages(): List<Message>? {
-            val retList = list
-            list = mutableListOf()
-            return retList
-        }
-
-        /**
          * Send debug message via Log and via WebSocket.
          */
         fun send(prefix: String? = null, message: String) {
@@ -455,6 +446,7 @@ class DebugM {
          * Tries to send via WebSocket and remove from list every stored message.
          */
         fun resolveStoredMessages() {
+            DebugM.send("Commons", "resolveStoredMessages()")
             val clone = mutableListOf<Message>()
             list.forEach {
                 clone.add(it)
