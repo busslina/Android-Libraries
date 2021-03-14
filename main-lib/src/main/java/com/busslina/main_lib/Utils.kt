@@ -34,8 +34,12 @@ class Utils {
         fun getHourFormatted(date: Date = Date()): String {
             val formatter = DateTimeFormatter.ofPattern("HH:mm:ss")
             return ZonedDateTime.now(ZoneId.of("Europe/Madrid")).format(formatter)
-
         }
+
+//    fun getHourFormatted(date: Date = Date()): String {
+//        val formatter = SimpleDateFormat("HH:mm:ss")
+//        return formatter.format(date)
+//    }
     }
 
 }

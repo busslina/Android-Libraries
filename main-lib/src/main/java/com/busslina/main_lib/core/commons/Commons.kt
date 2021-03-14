@@ -395,8 +395,8 @@ class DebugM {
     class Message(private val prefix: String?, private val message: String) {
         private val date = Date()
 
-        fun getWsText(): String {
-            return  "[DebugM] - [${Utils.getHourFormatted(date)}] --> ${if (prefix != null) "$prefix: " else ""} $message"
+        private fun getWsText(): String {
+            return "[DebugM] - [${Utils.getHourFormatted(date)}] --> ${if (prefix != null) "$prefix: " else ""} $message"
         }
 
         /**
