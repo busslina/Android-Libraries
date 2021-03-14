@@ -165,7 +165,7 @@ abstract class ForegroundServiceBase: Service() {
         // TESTING
         if (recoveryMode) {
             // Print variables state
-            DebugM.send("ForegroundServiceBase", "WebSocket module is null? :${CommonsModules.websocket != null}")
+            DebugM.send("ForegroundServiceBase", "WebSocket module is null? :${CommonsModules.websocket == null}")
             DebugM.send("ForegroundServiceBase", "WebSocket module is started? :${CommonsModules.websocket != null && CommonsModules.websocket!!.isStarted()}")
         }
 
