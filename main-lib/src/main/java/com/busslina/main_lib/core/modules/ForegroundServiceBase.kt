@@ -10,6 +10,7 @@ import android.os.PowerManager
 import android.util.Log
 import com.busslina.main_lib.core.commons.Commons.Companion.debug
 import com.busslina.main_lib.core.commons.CommonsModules
+import com.busslina.main_lib.core.commons.DebugM
 import com.busslina.main_lib.core.modules.NotificationsBase.Companion.NOTIFICATION_ID
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -83,7 +84,7 @@ abstract class ForegroundServiceBase: Service() {
      * Constructor
      */
     init {
-        Log.i("ForegroundServiceBase", "constructor()")
+        DebugM.send("ForegroundServiceBase", "constructor()")
         CommonsModules.foregroundService = this
     }
 
@@ -100,7 +101,7 @@ abstract class ForegroundServiceBase: Service() {
      * 01 - Is stopped.
      */
     fun isStopped(): Boolean {
-        Log.i("ForegroundServiceBase", "isStopped() -- > " + (state == STATE_STOPPED))
+        DebugM.send("ForegroundServiceBase", "isStopped() -- > " + (state == STATE_STOPPED))
         return state == STATE_STOPPED
     }
 
@@ -108,7 +109,7 @@ abstract class ForegroundServiceBase: Service() {
      * 02 - Is started.
      */
     fun isStarted(): Boolean {
-        Log.i("ForegroundServiceBase", "isStarted() -- > " + (state == STATE_STARTED))
+        DebugM.send("ForegroundServiceBase", "isStarted() -- > " + (state == STATE_STARTED))
         return state == STATE_STARTED
     }
 
@@ -119,7 +120,7 @@ abstract class ForegroundServiceBase: Service() {
         if (lockAcquired) {
             return
         }
-        Log.i("ForegroundServiceBase", "acquireLock()")
+        DebugM.send("ForegroundServiceBase", "acquireLock()")
         wakeLock = (getSystemService(Context.POWER_SERVICE) as PowerManager).run {
             newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "ForegroudService::lock").apply {
                 CommonsModules.websocket!!.emit("message", "[INFO]: Acquiring lock")
@@ -136,7 +137,7 @@ abstract class ForegroundServiceBase: Service() {
         if (!lockAcquired) {
             return
         }
-        Log.i("ForegroundServiceBase", "releaseLock()")
+        DebugM.send("ForegroundServiceBase", "releaseLock()")
         if (wakeLock != null && wakeLock!!.isHeld) {
             CommonsModules.websocket!!.emit("message", "[INFO]: Releasing lock")
             wakeLock!!.release()
@@ -164,7 +165,7 @@ abstract class ForegroundServiceBase: Service() {
      * 01 - On create.
      */
     override fun onCreate() {
-        Log.i("ForegroundServiceBase", "onCreate()")
+        DebugM.send("ForegroundServiceBase", "onCreate()")
         state = STATE_STARTED
         super.onCreate()
 
@@ -195,7 +196,7 @@ abstract class ForegroundServiceBase: Service() {
      * 02 - On bind.
      */
     override fun onBind(p0: Intent?): IBinder? {
-        Log.i("ForegroundServiceBase", "onBind()")
+        DebugM.send("ForegroundServiceBase", "onBind()")
         return null
     }
 
@@ -203,15 +204,15 @@ abstract class ForegroundServiceBase: Service() {
      * 03 - On start command.
      */
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        Log.i("ForegroundServiceBase", "onStartCommand()")
+        DebugM.send("ForegroundServiceBase", "onStartCommand()")
 
         if (intent == null) {
-            Log.i("ForegroundServiceBase", "onStartCommand() --> intent = null")
+            DebugM.send("ForegroundServiceBase", "onStartCommand() --> intent = null")
         } else {
-            Log.i("ForegroundServiceBase", "onStartCommand() --> intent = $intent")
-            Log.i("ForegroundServiceBase", "onStartCommand() --> action = ${intent.action}")
+            DebugM.send("ForegroundServiceBase", "onStartCommand() --> intent = $intent")
+            DebugM.send("ForegroundServiceBase", "onStartCommand() --> action = ${intent.action}")
         }
-        Log.i("ForegroundServiceBase", "onStartCommand() --> isStarted: ${isStarted()}")
+        DebugM.send("ForegroundServiceBase", "onStartCommand() --> isStarted: ${isStarted()}")
 
 //        onStartCommandCount++
 
@@ -225,7 +226,7 @@ abstract class ForegroundServiceBase: Service() {
      * 04 - On destroy.
      */
     override fun onDestroy() {
-        Log.i("ForegroundServiceBase", "onDestroy()")
+        DebugM.send("ForegroundServiceBase", "onDestroy()")
 
         val semaphore = CommonsModules.websocket!!.semaphore
 
@@ -250,7 +251,7 @@ abstract class ForegroundServiceBase: Service() {
      * 05 - On task removed.
      */
     override fun onTaskRemoved(rootIntent: Intent?) {
-        Log.i("ForegroundServiceBase", "onTaskRemoved()")
+        DebugM.send("ForegroundServiceBase", "onTaskRemoved()")
         super.onTaskRemoved(rootIntent)
 
 //        CommonsModules.websocket!!.emit("message", "[INFO]: Foreground Service -- onTaskRemoved()")

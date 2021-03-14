@@ -6,15 +6,19 @@ import android.content.SharedPreferences
 import android.os.Build
 import android.util.Log
 import android.view.WindowManager
+import com.busslina.main_lib.Utils
 import com.busslina.main_lib.core.Semaphore
 import com.busslina.main_lib.core.interfaces.MainActivityI
 import com.busslina.main_lib.core.modules.Auth
 import com.busslina.main_lib.core.modules.ForegroundServiceBase
 import com.busslina.main_lib.core.modules.WebSocketBase
+import com.busslina.main_lib.core.modules.Events
+import com.busslina.main_lib.core.modules.Events.Companion.WS_SIGNAL_DEBUG_M_MESSAGE
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import java.util.*
 
 class Commons {
 
@@ -379,6 +383,79 @@ class Commons {
         private fun advicePermissionsNotGranted() {
             debug("advicePermissionsNotGranted()", MODE_DEBUG_ALL)
             sendMessageMethodChannel(METHOD_CHANNEL_PERMISSIONS_NOT_GRANTED)
+        }
+    }
+}
+
+/**
+ * Debig Manager
+ */
+class DebugM {
+
+    class Message(private val prefix: String?, private val message: String) {
+        private val date = Date()
+
+        fun getWsText(): String {
+            return  "[DebugM] - [${Utils.getHourFormatted(date)}] --> ${if (prefix != null) "$prefix: " else ""} $message"
+        }
+
+        /**
+         * Prints message via Log
+         */
+        fun logInfo() {
+            Log.i(prefix, message)
+        }
+
+        /**
+         * Send message via WebSocket
+         */
+        fun sendOverWebsocket(): Boolean {
+            return CommonsModules.websocket != null && CommonsModules.websocket!!.emit(WS_SIGNAL_DEBUG_M_MESSAGE, getWsText())
+        }
+    }
+
+    companion object {
+
+        private var list = mutableListOf<Message>()
+
+        /**
+         * Return list and clear it
+         */
+        fun getStoredMessages(): List<Message>? {
+            val retList = list
+            list = mutableListOf()
+            return retList
+        }
+
+        /**
+         * Send debug message via Log and via WebSocket.
+         */
+        fun send(prefix: String? = null, message: String) {
+            val messageObj = Message(prefix, message)
+
+            // Send via Log
+            messageObj.logInfo()
+
+            // Send via WebSocket. If not possible the store it on list
+            if (!messageObj.sendOverWebsocket()) {
+                list.add(messageObj)
+            }
+        }
+
+        /**
+         * Tries to send via WebSocket and remove from list every stored message.
+         */
+        fun resolveStoredMessages() {
+            val clone = mutableListOf<Message>()
+            list.forEach {
+                clone.add(it)
+            }
+
+            clone.forEach {
+                if (it.sendOverWebsocket()) {
+                    list.remove(it)
+                }
+            }
         }
     }
 }

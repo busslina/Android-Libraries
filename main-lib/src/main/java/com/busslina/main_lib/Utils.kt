@@ -1,5 +1,8 @@
 package com.busslina.main_lib
 
+import java.time.ZoneId
+import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
 import java.util.*
 
 class Utils {
@@ -8,8 +11,6 @@ class Utils {
 
         ///
         fun getElapsedTime(initialDate: Date): String {
-//            val diff = Date().time - initialDate.time
-//            val secondsTotal = (diff / 1000)
             val secondsTotal = getDateDiff(initialDate)
             val seconds = secondsTotal % 60
             val minutesTotal = (secondsTotal / 60)
@@ -28,6 +29,12 @@ class Utils {
         fun getDateDiff(initialDate: Date, finalDate: Date = Date()): Int {
             val diff = finalDate.time - initialDate.time
             return (diff / 1000).toInt()
+        }
+
+        fun getHourFormatted(date: Date = Date()): String {
+            val formatter = DateTimeFormatter.ofPattern("HH:mm:ss")
+            return ZonedDateTime.now(ZoneId.of("Europe/Madrid")).format(formatter)
+
         }
     }
 

@@ -7,6 +7,7 @@ import com.busslina.main_lib.core.Semaphore
 import com.busslina.main_lib.core.commons.Commons
 import com.busslina.main_lib.core.commons.Commons.Companion.debug
 import com.busslina.main_lib.core.commons.CommonsModules
+import com.busslina.main_lib.core.commons.DebugM
 import io.socket.client.IO
 import io.socket.client.Socket
 import kotlinx.coroutines.GlobalScope
@@ -14,10 +15,7 @@ import kotlinx.coroutines.launch
 import org.json.JSONObject
 import java.lang.Exception
 
-abstract class WebSocketBase
-/**
- * Constructor.
- */() : ModuleBase() {
+abstract class WebSocketBase: ModuleBase() {
 
     companion object {
         var authenticationRequired = false
@@ -50,7 +48,8 @@ abstract class WebSocketBase
      * Constructor.
      */
     init {
-        Log.i("WebSocketBase", "constructor()")
+//        Log.i("WebSocketBase", "constructor()")
+        DebugM.send("WebSocketBase", "constructor()")
         CommonsModules.websocket = this
     }
 
@@ -66,7 +65,8 @@ abstract class WebSocketBase
      * 01 - Start.
      */
     override fun start() {
-        Log.i("WebSocketBase", "start()")
+//        Log.i("WebSocketBase", "start()")
+        DebugM.send("WebSocketBase", "start()")
         if (isStarted()) {
             return
         }
@@ -81,7 +81,8 @@ abstract class WebSocketBase
      * 02 - Stop.
      */
     override fun stop() {
-        Log.i("WebSocketBase", "stop()")
+//        Log.i("WebSocketBase", "stop()")
+        DebugM.send("WebSocketBase", "stop()")
         if (isStopped()) {
             return
         }
@@ -96,7 +97,8 @@ abstract class WebSocketBase
      * 03 - Clear.
      */
     override fun clear() {
-        Log.i("WebSocketBase", "clear()")
+//        Log.i("WebSocketBase", "clear()")
+        DebugM.send("WebSocketBase", "clear()")
         connected = false
         ruptureDisconnected = false
         socket = null
@@ -111,13 +113,14 @@ abstract class WebSocketBase
      * - 04 - Emit
      * - 05 - Is connected
      * - 06 - Is rupture connected
+     * - 07 - Check Debug Manager pending messages
      */
 
     /**
      * 01 - Connect.
      */
     private fun connect() {
-        Log.i("WebSocketBase", "connect()")
+        DebugM.send("WebSocketBase", "connect()")
         if (!preInitied) {
             throw Exception("WebSocket not preinitied")
         }
@@ -133,21 +136,20 @@ abstract class WebSocketBase
 
         // Connect event
         socket!!.once("connect") {
-            Log.i("WebSocketBase", "connect event")
-//            debug("Websocket: connect")
+            DebugM.send("WebSocketBase", "connect event")
 
             onSocketConnected(false)
         }
 
         // Error event
         socket!!.once("error") {
-            Log.i("WebSocketBase", "error event")
+            DebugM.send("WebSocketBase", "error event")
 //            debug("Websocket: error")
         }
 
         // Disconnect event
         socket!!.on("disconnect") {
-            Log.i("WebSocketBase", "disconnect event)")
+            DebugM.send("WebSocketBase", "disconnect event)")
 //            debug("Websocket: disconnect")
             connected = false
             ruptureDisconnected = true
@@ -157,7 +159,7 @@ abstract class WebSocketBase
 
         // Reconnect event
         socket!!.io().on("reconnect") {
-            Log.i("WebSocketBase", "reconnect event")
+            DebugM.send("WebSocketBase", "reconnect event")
 //            debug("Websocket: reconnect")
             ruptureDisconnected = false
             onSocketConnected(true)
@@ -180,7 +182,7 @@ abstract class WebSocketBase
      * 02 - Disconnect.
      */
     private fun disconnect() {
-        Log.i("WebSocketBase", "disconnect()")
+        DebugM.send("WebSocketBase", "disconnect()")
         socket!!.off()
         socket!!.disconnect()
     }
@@ -189,10 +191,11 @@ abstract class WebSocketBase
      * 03 - On socket connected.
      */
     private fun onSocketConnected(reconnection: Boolean) {
-        Log.i("WebSocketBase", "onSocketConnected()")
+        DebugM.send("WebSocketBase", "onSocketConnected()")
 //        debug("Websocket onSocketConnected")
 
         if (authenticationRequired) {
+            // Authentication required
             // 1. Sending token & device type
             val mapData: Map<String, Any> = mapOf("token" to ForegroundServiceBase.token!!, "deviceType" to Utils.getDeviceType())
             val data = JSONObject(mapData)
@@ -206,6 +209,9 @@ abstract class WebSocketBase
 
                 // Advice Flutter part
                 Commons.sendMessageMethodChannel(Commons.METHOD_CHANNEL_WEBSOCKET_SERVICE_CONNECTED)
+
+                // Debug Manager pending messages
+                checkDebugManagerPendingMessages()
 
                 // Custom event handler
                 initCustomEventHandler(socket!!)
@@ -224,18 +230,23 @@ abstract class WebSocketBase
                 ForegroundServiceBase.sessionKilled()
             }
         } else {
+            // Authentication not required
             connected = true
             if (!reconnection) {
-                CommonsModules.websocket!!.emit("message", "[INFO]: Websocket -- connect (first time)")
+//                CommonsModules.websocket!!.emit("message", "[INFO]: Websocket -- connect (first time)")
+                DebugM.send(message = "[INFO]: Websocket -- connect (first time)")
             }
 
             // Advice Flutter part
             Commons.sendMessageMethodChannel(Commons.METHOD_CHANNEL_WEBSOCKET_SERVICE_CONNECTED)
 
+            // Debug Manager pending messages
+            checkDebugManagerPendingMessages()
+
             // Custom event handler
             initCustomEventHandler(socket!!)
 
-            // After socket conected
+            // After socket connected
             afterSocketConnected()
         }
 
@@ -248,11 +259,11 @@ abstract class WebSocketBase
     /**
      * 04 - Emit.
      */
-    fun emit(event: String, data: Any? = "", lockSemaphore: Boolean = true) {
-        Log.v("WebSocketBase", "emit()")
+    fun emit(event: String, data: Any? = "", lockSemaphore: Boolean = true): Boolean {
+//        Log.v("WebSocketBase", "emit()")
         if (!connected) {
 //            debug("Cannot emit because is disconnected")
-            return
+            return false
         }
         GlobalScope.launch {
             if (lockSemaphore) {
@@ -262,8 +273,8 @@ abstract class WebSocketBase
             } else {
                 socket!!.emit(event, data)
             }
-
         }
+        return true
     }
 
     /**
@@ -280,6 +291,13 @@ abstract class WebSocketBase
         return ruptureDisconnected
     }
 
+    /**
+     * 07 - Check Debug Manager pending messages.
+     */
+    fun checkDebugManagerPendingMessages() {
+        DebugM.send("WebSocketBase", "checkDebugManagerPendingMessages(")
+        DebugM.resolveStoredMessages()
+    }
     /**
      * Abstract functions
      *
@@ -304,11 +322,16 @@ abstract class WebSocketBase
     abstract fun messageReceived(sender: String, msg: String)
 }
 
-private class Events {
+class Events {
     companion object {
+
+        // Core
         const val WS_SIGNAL_AUTH_TOKEN      = "auth-token"
         const val WS_SIGNAL_ID_ASSIGNATION  = "assigned-id"
         const val WS_SIGNAL_SESSION_KILLED  = "session-killed"
+
+        // Debug module
+        const val WS_SIGNAL_DEBUG_M_MESSAGE = "debug-module-message"
 
         // TODO
         const val WS_SIGNAL_CLOSE_APP       = "close-app"
