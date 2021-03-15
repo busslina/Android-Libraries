@@ -5,8 +5,10 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Build
+import android.os.Environment
 import android.util.Log
 import android.view.WindowManager
+import androidx.annotation.RequiresApi
 import com.busslina.main_lib.Utils
 import com.busslina.main_lib.core.Semaphore
 import com.busslina.main_lib.core.interfaces.MainActivityI
@@ -19,6 +21,8 @@ import com.google.gson.Gson
 import com.google.gson.JsonObject
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import java.io.File
+import java.io.FileOutputStream
 import java.io.OutputStreamWriter
 import java.util.*
 
@@ -390,6 +394,18 @@ class Commons {
 class DebugM {
 
     class Message(private val prefix: String?, private val message: String) {
+
+        companion object {
+            var logFile: File? = null
+
+            fun getCustomLogFile(): File {
+                if (logFile != null) {
+                    return logFile!!
+                }
+                val dir = CommonsModules.appContext!!.getExternalFilesDir(null)!!
+                return File(dir.absolutePath, "customLog.txt")
+            }
+        }
         private val date = Date()
 
         private fun getWsText(): String {
@@ -407,8 +423,9 @@ class DebugM {
          * Save message in local File
          */
         fun writeToFile() {
-            val ctx = CommonsModules.appContext!!
-            val osw = OutputStreamWriter(ctx.openFileOutput("customLog.txt", Context.MODE_APPEND))
+            val logFile = getCustomLogFile()
+            send("Commons", "Log file: ${logFile.absolutePath}", false)
+            val osw = OutputStreamWriter(FileOutputStream(logFile))
             osw.write(getWsText())
             osw.close()
         }
