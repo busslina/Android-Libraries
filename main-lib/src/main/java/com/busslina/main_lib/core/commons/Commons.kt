@@ -425,9 +425,8 @@ class DebugM {
          */
         fun writeToFile() {
             val logFile = getCustomLogFile()
-            send("Commons", "Log file: ${logFile.absolutePath}", false)
             val osw = OutputStreamWriter(FileOutputStream(logFile, true))
-            osw.write(getWsText())
+            osw.write(getWsText() + "\n")
             osw.close()
         }
 
