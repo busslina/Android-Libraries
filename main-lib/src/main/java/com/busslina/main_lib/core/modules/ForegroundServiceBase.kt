@@ -85,6 +85,7 @@ abstract class ForegroundServiceBase: Service() {
      */
     init {
         DebugM.send("ForegroundServiceBase", "constructor()")
+        CommonsModules.appContext = applicationContext
         CommonsModules.foregroundService = this
     }
 
@@ -122,7 +123,7 @@ abstract class ForegroundServiceBase: Service() {
         if (lockAcquired) {
             return
         }
-        DebugM.send("ForegroundServiceBase", "acquireLock()")
+        DebugM.send("ForegroundServiceBase", "acquireLock()",)
         wakeLock = (getSystemService(Context.POWER_SERVICE) as PowerManager).run {
             newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "ForegroudService::lock").apply {
                 CommonsModules.websocket!!.emit("message", "[INFO]: Acquiring lock")
@@ -270,22 +271,6 @@ abstract class ForegroundServiceBase: Service() {
     override fun onTaskRemoved(rootIntent: Intent?) {
         DebugM.send("ForegroundServiceBase", "onTaskRemoved()")
         super.onTaskRemoved(rootIntent)
-
-//        CommonsModules.websocket!!.emit("message", "[INFO]: Foreground Service -- onTaskRemoved()")
-
-
-//        debug("onTaskRemoved()")
-
-//        val restartServiceIntent = Intent(applicationContext, Commons.foregroundServiceClass).also {
-//            it.setPackage(packageName)
-//        }
-//
-//        val restartServicePendingIntent: PendingIntent = PendingIntent.getService(this, 1, restartServiceIntent, PendingIntent.FLAG_ONE_SHOT)
-//
-//        val alarmService: AlarmManager = applicationContext.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-//
-//        alarmService.set(AlarmManager.ELAPSED_REALTIME, elapsedRealtime() + 1000, restartServicePendingIntent)
-
     }
 
     /**

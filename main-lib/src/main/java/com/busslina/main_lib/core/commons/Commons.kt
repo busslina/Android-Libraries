@@ -1,6 +1,7 @@
 package com.busslina.main_lib.core.commons
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Build
@@ -18,6 +19,7 @@ import com.google.gson.Gson
 import com.google.gson.JsonObject
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import java.io.OutputStreamWriter
 import java.util.*
 
 class Commons {
@@ -402,6 +404,16 @@ class DebugM {
         }
 
         /**
+         * Save message in local File
+         */
+        fun writeToFile() {
+            val ctx = CommonsModules.appContext!!
+            val osw = OutputStreamWriter(ctx.openFileOutput("customLog.txt", Context.MODE_APPEND))
+            osw.write(getWsText())
+            osw.close()
+        }
+
+        /**
          * Prints message via Log
          */
         fun logInfo() {
@@ -431,6 +443,9 @@ class DebugM {
             // Send via Log
             messageObj.logInfo()
 
+            // Send via local File
+            messageObj.writeToFile()
+
             // Send via WebSocket. If not possible the store it on list
             if (!messageObj.sendOverWebsocket()) {
                 list.add(messageObj)
@@ -441,7 +456,6 @@ class DebugM {
          * Tries to send via WebSocket and remove from list every stored message.
          */
         fun resolveStoredMessages() {
-            send("Commons", "resolveStoredMessages()")
             val clone = mutableListOf<Message>()
             list.forEach {
                 clone.add(it)
