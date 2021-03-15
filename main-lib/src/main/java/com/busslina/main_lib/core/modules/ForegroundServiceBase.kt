@@ -84,9 +84,9 @@ abstract class ForegroundServiceBase: Service() {
      * Constructor
      */
     init {
-        DebugM.send("ForegroundServiceBase", "constructor()")
         CommonsModules.appContext = applicationContext
         CommonsModules.foregroundService = this
+        DebugM.send("ForegroundServiceBase", "constructor()")
     }
 
     /**
