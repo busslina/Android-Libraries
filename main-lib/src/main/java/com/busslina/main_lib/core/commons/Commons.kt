@@ -403,7 +403,8 @@ class DebugM {
                     return logFile!!
                 }
                 val dir = CommonsModules.appContext!!.getExternalFilesDir(null)!!
-                return File(dir.absolutePath, "customLog.txt")
+                logFile = File(dir.absolutePath, "customLog.txt")
+                return logFile!!
             }
         }
         private val date = Date()
