@@ -84,9 +84,9 @@ abstract class ForegroundServiceBase: Service() {
      * Constructor
      */
     init {
-        CommonsModules.appContext = applicationContext
+
         CommonsModules.foregroundService = this
-        DebugM.send("ForegroundServiceBase", "constructor()")
+        DebugM.send("ForegroundServiceBase", "constructor()", false)
     }
 
     /**
@@ -208,6 +208,7 @@ abstract class ForegroundServiceBase: Service() {
      */
     override fun onCreate() {
         super.onCreate()
+        CommonsModules.appContext = applicationContext
         DebugM.send("ForegroundServiceBase", "onCreate()")
         initializeService(false)
     }

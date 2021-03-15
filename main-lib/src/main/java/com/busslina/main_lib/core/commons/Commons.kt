@@ -437,14 +437,16 @@ class DebugM {
         /**
          * Send debug message via Log and via WebSocket.
          */
-        fun send(prefix: String? = null, message: String) {
+        fun send(prefix: String? = null, message: String, writeToFile: Boolean = true) {
             val messageObj = Message(prefix, message)
 
             // Send via Log
             messageObj.logInfo()
 
             // Send via local File
-            messageObj.writeToFile()
+            if (writeToFile) {
+                messageObj.writeToFile()
+            }
 
             // Send via WebSocket. If not possible the store it on list
             if (!messageObj.sendOverWebsocket()) {
